@@ -3,7 +3,7 @@ angular.module('starter.controllers', [])
 .controller('TabCtrl', function($scope, $state) {
 })
 
-.controller('IntroCtrl', function($scope, $state, AuthService, $ionicPopup, $stateParams, $window, AuthService) {
+.controller('IntroCtrl', function($scope, $state, AuthService, $ionicPopup, $stateParams, $window, AuthService, UsersService) {
   function makeKey()
   {
     var text = "";
@@ -18,6 +18,11 @@ angular.module('starter.controllers', [])
   $scope.start  = function() {
     var user = {key: makeKey()};
     AuthService.start(user).then(function(res) {
+      var uuid = AuthService.loadPushToken();
+      var device = AuthService.loadDeviceInfo();
+      if(uuid && device) {
+        UsersService.saveDevice(uuid, device);
+      }
       $state.go('tab.home', {}, {location: "replace", reload: true});
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
@@ -136,7 +141,7 @@ angular.module('starter.controllers', [])
   }
 
   UsersService.getOptions().then(function(res) {
-    $scope.options = res;
+    $scope.options = res.data;
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -165,15 +170,14 @@ angular.module('starter.controllers', [])
 
 .controller('NotiCtrl', function($scope, $ionicPopup, UsersService) {
   $scope.notis = [];
+  $scope.header = "";
 
   UsersService.getNoti().then(function(res) {
     $scope.notis = res.data.notis;
-    if($scope.lectures.length == 0) {
-      var alertPopup = $ionicPopup.alert({
-        title: '안내',
-        template: '즐겨찾기한 강좌의 변동사항이 없습니다.',
-        okText: "확인"
-      });
+    if($scope.notis.length == 0) {
+      $scope.header = '즐겨찾기한 강좌의 변동사항이 없습니다.';
+    } else {
+      $scope.header = "";
     }
   }, function(err) {
     var alertPopup = $ionicPopup.alert({

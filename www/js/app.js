@@ -8,7 +8,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  host: 'http://127.0.0.1:3000',
+  //host: 'http://192.186.0.6:3000',
+  //host: 'http://127.0.0.1:3000',
+  host: 'http://dev.tantara.me:3000',
   web: 'http://sugang.snu.ac.kr',
 })
 
@@ -97,7 +99,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
       var push = PushNotification.init({
         android: {
-          senderID: "246536043794",
+          senderID: "607566472910",
           "icon": "icon",
           "iconColor": "#FFFFFF"
         },
@@ -113,8 +115,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         // data.registrationId
         console.log(data.registrationId);
         AuthService.storePushToken(data.registrationId);
-        var device = AuthService.loadDeviceInfo();
-        AuthService.saveDevice(data.registrationId, device);
       });
 
       push.on('notification', function(data) {
