@@ -1,10 +1,48 @@
 <ion-view>
-  <ion-nav-title>{{lecture.course.name}}</ion-nav-title>
+  <ion-nav-title>{{lecture.course.name}} - {{lecture.instructor.name}}</ion-nav-title>
   <ion-nav-buttons side="right">
     <button class="button" ng-click="openLecture(lecture)">
       수강편람
     </button>
   </ion-nav-buttons>
   <ion-content>
+	  <div class="card">
+		  <div class="item item-divider">
+			<h3>{{lecture.course.code}} - {{lecture.code}}</h3>
+			<h4>현 {{lecture.current}}명 / 정원 {{lecture.quota}}명</h4>
+		  </div>
+		  <div class="item item-text-wrap">
+			<ul class="list">
+			  <li class="item item-divider">
+				수업교실 / 시간
+			  </li>
+				<li class="item" ng-repeat="time in lecture.time_arr">
+					{{lecture.location_arr[$index]}} / {{time}}
+				</li>
+			  <li class="item item-divider">
+				직전 수강 취소 시간
+			  </li>
+			  <li class="item">데이터 없음</li>
+			  <li class="item item-divider">
+				즐겨찾기 등록 인원
+			  </li>
+			  <li class="item">데이터 없음</li>
+			  <li class="item item-divider">
+				즐겨찾기 등록
+			  </li>
+
+
+				  <li class="item item-toggle">
+				  <label class="toggle" ng-click="toggle(lecture.id)">
+					   <input type="checkbox">
+					   <div class="track">
+						 <div class="handle"></div>
+					   </div>
+					</label>
+				</li>
+			</ul>
+		</div>		
+	</div>
+
   </ion-content>
 </ion-view>

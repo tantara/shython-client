@@ -86,14 +86,29 @@ angular.module('starter.controllers', [])
 
 .controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope) {
   $scope.lecture = {};
+  $scope.remark = false;
 
   $scope.openLecture = function(lecture) {
     var url = 'http://sugang.snu.ac.kr/sugang/cc/cc101.action?openSchyy=2015&openShtmFg=U000200002&openDetaShtmFg=U000300001&sbjtCd=' + lecture.course.code + '&ltNo=' + lecture.code + '&sugangFlag=P';
     $rootScope.openWebview(url);
   }
 
+  $scope.toggle = function(lectureId) {
+    LecturesService.toggle(lectureId).then(function(res) {
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  };
+
   LecturesService.get($stateParams.lectureId).then(function(res) {
     $scope.lecture = res.data.lecture;
+	$scope.lecture.time_arr = $scope.lecture.time_str.split("/");
+	$scope.lecture.location_arr = $scope.lecture.location_str.split("/");
+	console.log($scope.lecture);
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',

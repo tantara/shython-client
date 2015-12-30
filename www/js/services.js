@@ -43,7 +43,7 @@ angular.module('starter.services', [])
     });
   };
 
-  var toggle = function(lectureid) {
+  var toggle = function(lectureId) {
     return $q(function(resolve, reject) {
       $http({
         method: 'POST',
