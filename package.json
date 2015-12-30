@@ -23,7 +23,8 @@
     "ionic-plugin-keyboard",
     "cordova-plugin-app-version",
     "cordova-plugin-inappbrowser",
-    "phonegap-plugin-push"
+    "phonegap-plugin-push",
+    "de.appplant.cordova.plugin.email-composer"
   ],
   "cordovaPlatforms": [
     "android"

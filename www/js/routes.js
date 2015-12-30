@@ -62,14 +62,20 @@ angular.module('starter.routes', [])
     }
   })
 
-  .state('tab.lecture-detail', {
-    url: '/lectures/:lectureId',
+  .state('tab.home-lecture-detail', {
+    url: '/home/lectures/:lectureId',
     views: {
-      'tab-home@tab': {
+      'tab-home': {
         templateUrl: 'templates/lecture-detail.html',
         controller: 'LectureDetailCtrl'
-      },
-      'tab-bookmark@tab': {
+      }
+    }
+  })
+
+  .state('tab.bookmark-lecture-detail', {
+    url: '/bookmark/lectures/:lectureId',
+    views: {
+      'tab-bookmark': {
         templateUrl: 'templates/lecture-detail.html',
         controller: 'LectureDetailCtrl'
       }
@@ -82,6 +88,16 @@ angular.module('starter.routes', [])
       'tab-more': {
         templateUrl: 'templates/tab-more.html',
         controller: 'MoreCtrl'
+      }
+    }
+  })
+
+  .state('tab.noti', {
+    url: '/more/noti',
+    views: {
+      'tab-more': {
+        templateUrl: 'templates/more-noti.html',
+        controller: 'NotiCtrl'
       }
     }
   })

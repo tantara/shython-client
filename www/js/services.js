@@ -1,6 +1,20 @@
 angular.module('starter.services', [])
 
 .service('LecturesService', function($q, $http, SERVER) {
+  var hot = function(q) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/lectures/hot'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
   var search = function(q) {
     return $q(function(resolve, reject) {
       $http({
@@ -46,6 +60,7 @@ angular.module('starter.services', [])
   return {
     get: get,
     search: search,
+    hot: hot,
     toggle: toggle
   };
 })
@@ -70,6 +85,20 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/bookmark'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('Signup Failed.');
+      });
+    });
+  };
+
+  var getNoti = function() {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/users/me/noti'
       }).then(function successCallback(response) {
         console.log(response);
         resolve(response);
@@ -125,6 +154,7 @@ angular.module('starter.services', [])
 
   return {
     getBookmark: getBookmark,
+    getNoti: getNoti,
     getOptions: getOptions,
     editOptions: editOptions,
     saveDevice: saveDevice
@@ -158,11 +188,15 @@ angular.module('starter.services', [])
   }
 
   function loadDeviceInfo() {
-    window.localStorage.getItem(LOCAL_DEVICE_INFO_KEY);
+    return window.localStorage.getItem(LOCAL_DEVICE_INFO_KEY);
   }
 
   function storePushToken(token) {
     window.localStorage.setItem(LOCAL_PUSH_TOKEN_KEY, token);
+  }
+
+  function loadPushToken() {
+    return window.localStorage.getItem(LOCAL_PUSH_TOKEN_KEY);
   }
 
   function useCredentials(token) {
@@ -216,6 +250,7 @@ angular.module('starter.services', [])
     storeDeviceInfo: storeDeviceInfo,
     loadDeviceInfo: loadDeviceInfo,
     storePushToken: storePushToken,
+    loadPushToken: loadPushToken,
     isAuthorized: isAuthorized,
     isAuthenticated: function() {return isAuthenticated;},
     role: function() {return role;}
@@ -233,6 +268,7 @@ angular.module('starter.services', [])
       return response;
     },
     responseError: function (response) {
+      $rootScope.hideLoading(response.config);
       $rootScope.$broadcast({
         401: AUTH_EVENTS.notAuthenticated,
         403: AUTH_EVENTS.notAuthorized

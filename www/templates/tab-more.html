@@ -1,6 +1,16 @@
 <ion-view view-title="더보기">
   <ion-content>
     <ion-list>
+      <div class="item item-divider">
+        계정
+      </div>
+      <a class="item item-icon-right" href="#/tab/more/noti">
+        즐찾한 강좌의 변동사항
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </a>
+      <div class="item item-divider">
+        설정
+      </div>
       <li class="item item-toggle">
         빈자리 알림 받기
         <label class="toggle toggle-positive">
@@ -9,6 +19,26 @@
             <div class="handle"></div>
           </div>
         </label>
+      </li>
+      <div class="item item-divider">
+        정보
+      </div>
+      <li class="item">
+        마지막 업데이트
+        <span class="item-note">
+          Grammy
+        </span>
+      </li>
+      <div class="item item-divider">
+        안내
+      </div>
+      <li class="item item-icon-right" ng-click="openHelp()">
+        도움말
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </li>
+      <li class="item item-icon-right" ng-click="sendMail()">
+        문의하기
+        <i class="icon ion-chevron-right icon-accessory"></i>
       </li>
     </ion-list>
 

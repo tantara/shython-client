@@ -8,11 +8,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  host: 'http://127.0.0.1:3000',
+  //host: 'http://192.186.0.6:3000',
+  //host: 'http://127.0.0.1:3000',
+  host: 'http://dev.tantara.me:3000',
   web: 'http://sugang.snu.ac.kr',
 })
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);
@@ -33,6 +35,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         console.log('hideLoading');
         $ionicLoading.hide();
       }
+    }
+  }
+
+  $rootScope.openWebview = function(url) {
+    if(ionic.Platform.isWebView()) {
+      var options = {
+        location: 'no',
+        clearcache: 'yes',
+        toolbar: 'yes'
+      };
+      $cordovaInAppBrowser.open(url, '_blank', options)
+      .then(function(event) {
+        // success
+      })
+      .catch(function(event) {
+        // error
+      });
+    } else {
+      $window.open(url);
     }
   }
 
@@ -78,7 +99,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
       var push = PushNotification.init({
         android: {
-          senderID: "246536043794",
+          senderID: "607566472910",
           "icon": "icon",
           "iconColor": "#FFFFFF"
         },
@@ -94,8 +115,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         // data.registrationId
         console.log(data.registrationId);
         AuthService.storePushToken(data.registrationId);
-        var device = AuthService.loadDeviceInfo();
-        AuthService.saveDevice(data.registrationId, device);
       });
 
       push.on('notification', function(data) {
