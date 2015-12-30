@@ -12,7 +12,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   web: 'http://sugang.snu.ac.kr',
 })
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);
@@ -33,6 +33,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         console.log('hideLoading');
         $ionicLoading.hide();
       }
+    }
+  }
+
+  $rootScope.openWebview = function(url) {
+    if(ionic.Platform.isWebView()) {
+      var options = {
+        location: 'no',
+        clearcache: 'yes',
+        toolbar: 'yes'
+      };
+      $cordovaInAppBrowser.open(url, '_blank', options)
+      .then(function(event) {
+        // success
+      })
+      .catch(function(event) {
+        // error
+      });
+    } else {
+      $window.open(url);
     }
   }
 

@@ -29,33 +29,26 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('HomeCtrl', function($scope, $ionicPopup, $cordovaInAppBrowser, LecturesService) {
+.controller('HomeCtrl', function($scope, $ionicPopup, LecturesService) {
   $scope.searchForm = {};
   $scope.lectures = [];
+  $scope.header = "";
 
-  $scope.openLecture = function(lecture) {
-
-    if(ionic.Platform.isWebView()) {
-      var options = {
-        location: 'no',
-        clearcache: 'yes',
-        toolbar: 'yes'
-      };
-      $cordovaInAppBrowser.open('https://sugang.snu.ac.kr/' + username, '_blank', options)
-      .then(function(event) {
-        // success
-      })
-      .catch(function(event) {
-        // error
-      });
-    } else {
-      $window.open('https://sugang.snu.ac.kr/' + username, '_blank');
-    }
-  }
+  LecturesService.hot().then(function(res) {
+    $scope.lectures = res.data.lectures;
+    $scope.header = res.data.header;
+  }, function(err) {
+    var alertPopup = $ionicPopup.alert({
+      title: '에러',
+      template: '정보를 가져오는데 문제가 생겼습니다.',
+      okText: "확인"
+    });
+  })
 
   $scope.search = function(form) {
     LecturesService.search(form.query).then(function(res) {
       $scope.lectures = res.data.lectures;
+      $scope.header = res.data.header;
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
         title: '에러',
@@ -66,31 +59,17 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('BookmarkCtrl', function($scope, $ionicPopup, $cordovaInAppBrowser, UsersService) {
+.controller('BookmarkCtrl', function($scope, $ionicPopup, UsersService) {
   $scope.lectures = [];
-
-  $scope.openLecture = function(lecture) {
-
-    if(ionic.Platform.isWebView()) {
-      var options = {
-        location: 'no',
-        clearcache: 'yes',
-        toolbar: 'yes'
-      };
-      $cordovaInAppBrowser.open('https://sugang.snu.ac.kr/' + username, '_blank', options)
-      .then(function(event) {
-        // success
-      })
-      .catch(function(event) {
-        // error
-      });
-    } else {
-      $window.open('https://sugang.snu.ac.kr/' + username, '_blank');
-    }
-  }
+  $scope.header = "";
 
   UsersService.getBookmark().then(function(res) {
     $scope.lectures = res.data.lectures;
+    if($scope.lectures.length == 0) {
+      $scope.header = "즐겨찾기한 강좌가 없습니다.";
+    } else {
+      $scope.header = "";
+    }
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -100,27 +79,12 @@ angular.module('starter.controllers', [])
   })
 })
 
-.controller('LectureDetailCtrl', function($scope, $ionicPopup, $cordovaInAppBrowser, LecturesService, $stateParams) {
+.controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope) {
   $scope.lecture = {};
 
   $scope.openLecture = function(lecture) {
-
-    if(ionic.Platform.isWebView()) {
-      var options = {
-        location: 'no',
-        clearcache: 'yes',
-        toolbar: 'yes'
-      };
-      $cordovaInAppBrowser.open('https://sugang.snu.ac.kr/' + lecture, '_blank', options)
-      .then(function(event) {
-        // success
-      })
-      .catch(function(event) {
-        // error
-      });
-    } else {
-      $window.open('https://sugang.snu.ac.kr/' + username, '_blank');
-    }
+    var url = 'http://sugang.snu.ac.kr/sugang/cc/cc101.action?openSchyy=2015&openShtmFg=U000200002&openDetaShtmFg=U000300001&sbjtCd=' + lecture.course.code + '&ltNo=' + lecture.code + '&sugangFlag=P';
+    $rootScope.openWebview(url);
   }
 
   LecturesService.get($stateParams.lectureId).then(function(res) {
@@ -134,9 +98,42 @@ angular.module('starter.controllers', [])
   })
 })
 
-.controller('MoreCtrl', function($scope, UsersService, $ionicPopup) {
+.controller('MoreCtrl', function($scope, UsersService, $ionicPopup, SERVER, $rootScope, $cordovaEmailComposer) {
 
   $scope.options = {};
+
+  $scope.openHelp = function() {
+    $rootScope.openWebview(SERVER.host + '/help');
+  }
+
+  $scope.sendMail = function() {
+    $cordovaEmailComposer.isAvailable().then(function() {
+      // is available
+      var info = JSON.parse(AuthService.loadDeviceInfo());
+      var infoStr = '<br>platform: ' + info.platform;
+      infoStr += '<br>model: ' + info.model;
+      infoStr += '<br>version: ' + info.version;
+      infoStr += '<br>appVersion: ' + appVersion; 
+
+      var email = {
+        to: 'help.shython@gmail.com',
+        subject: '[문의] 샤이썬에 문의합니다.',
+        body: '버그 제보 혹은 기능 제안을 해주세요.<br><br><br>' + infoStr,
+        isHtml: true
+      };
+
+      $cordovaEmailComposer.open(email).then(null, function () {
+        // user cancelled email
+      });
+    }, function () {
+      // not available
+      var alertPopup = $ionicPopup.alert({
+        title: '안내',
+        template: 'help.shython@gmail.com로 메일을 보내주세요.',
+        okText: "확인"
+      });
+    });
+  }
 
   UsersService.getOptions().then(function(res) {
     $scope.options = res;
@@ -164,5 +161,26 @@ angular.module('starter.controllers', [])
       });
     });
   }
+})
+
+.controller('NotiCtrl', function($scope, $ionicPopup, UsersService) {
+  $scope.notis = [];
+
+  UsersService.getNoti().then(function(res) {
+    $scope.notis = res.data.notis;
+    if($scope.lectures.length == 0) {
+      var alertPopup = $ionicPopup.alert({
+        title: '안내',
+        template: '즐겨찾기한 강좌의 변동사항이 없습니다.',
+        okText: "확인"
+      });
+    }
+  }, function(err) {
+    var alertPopup = $ionicPopup.alert({
+      title: '에러',
+      template: '정보를 가져오는데 문제가 생겼습니다.',
+      okText: "확인"
+    });
+  })
 })
 ;

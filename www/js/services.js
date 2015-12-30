@@ -1,6 +1,20 @@
 angular.module('starter.services', [])
 
 .service('LecturesService', function($q, $http, SERVER) {
+  var hot = function(q) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/lectures/hot'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
   var search = function(q) {
     return $q(function(resolve, reject) {
       $http({
@@ -46,6 +60,7 @@ angular.module('starter.services', [])
   return {
     get: get,
     search: search,
+    hot: hot,
     toggle: toggle
   };
 })
@@ -70,6 +85,20 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/bookmark'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('Signup Failed.');
+      });
+    });
+  };
+
+  var getNoti = function() {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/users/me/noti'
       }).then(function successCallback(response) {
         console.log(response);
         resolve(response);
@@ -125,6 +154,7 @@ angular.module('starter.services', [])
 
   return {
     getBookmark: getBookmark,
+    getNoti: getNoti,
     getOptions: getOptions,
     editOptions: editOptions,
     saveDevice: saveDevice

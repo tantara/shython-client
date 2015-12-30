@@ -1,8 +1,11 @@
-<ion-view view-title="즐겨찾기">
+<ion-view view-title="즐겨찾기" cache-view="false">
   <ion-content>
     <div class="list">
+      <div class="item item-divider" ng-show="header.length > 0">
+        {{header}}
+      </div>
 
-      <a class="item item-avatar item-icon-right" ng-repeat="lecture in lectures" ng-click="openLecture(lecture)">
+      <a class="item item-avatar item-icon-right" ng-repeat="lecture in lectures" href="#/tab/home/lectures/{{lecture.id}}">
         <h2>{{lecture.name}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </a>
