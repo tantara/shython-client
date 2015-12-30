@@ -12,8 +12,10 @@
 
     <div class="list">
 
-      <a class="item item-avatar item-icon-right" ng-repeat="lecture in lectures" href="#/tab/lectures/{{lecture.id}}">
-        <h2>{{lecture.name}}</h2>
+      <a class="item item-icon-right" ng-repeat="lecture in lectures" href="#/tab/lectures/{{lecture.id}}">
+        <h2>{{lecture.course.name}} - {{lecture.instructor.name}} / {{lecture.course.code}} - {{lecture.code}}</h2>
+		<h4>{{lecture.time_str}}</h4>
+		<h4>{{lecture.location_str}}</h4>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </a>
 
