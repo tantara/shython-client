@@ -1,0 +1,22 @@
+<ion-view view-title="검색">
+  <ion-content>
+    <div class="bar bar-header item-input-inset">
+      <label class="item-input-wrapper">
+        <i class="icon ion-ios-search placeholder-icon"></i>
+        <input type="search" placeholder="대학영어" ng-model="searchForm.query">
+      </label>
+      <button class="button button-clear" ng-class="{'button-positive': searchForm.query.length > 0}" ng-click="search(searchForm)">
+        검색
+      </button>
+    </div>
+
+    <div class="list">
+
+      <a class="item item-avatar item-icon-right" ng-repeat="lecture in lectures" href="#/tab/lectures/{{lecture.id}}">
+        <h2>{{lecture.name}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </a>
+
+    </div>
+  </ion-content>
+</ion-view>
