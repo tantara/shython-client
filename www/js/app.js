@@ -10,11 +10,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 .constant('SERVER', {
   //host: 'http://192.186.0.6:3000',
   //host: 'http://127.0.0.1:3000',
-  host: 'http://dev.tantara.me:3000',
-  web: 'http://sugang.snu.ac.kr',
+  host: 'http://api-sugang.snu.ac',
+  web: 'http://sugang.snu.ac',
 })
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);

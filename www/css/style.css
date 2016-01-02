@@ -3,3 +3,19 @@
 .tabs-striped .tab-item {
   border-color: #11c1f3 !important;
 }
+
+.button.pressed {
+  color: #11c1f3;
+}
+
+.button.pressed:hover {
+  color: #11c1f3;
+}
+
+.button-xsmall {
+  font-size: 10px;
+  padding: 1px 2px 1px;
+  margin: 0 2px;
+  line-height: 22px;
+  min-height: 26px;
+}

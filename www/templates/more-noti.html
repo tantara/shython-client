@@ -5,8 +5,14 @@
         {{header}}
       </div>
 
-      <a class="item item-avatar item-icon-right" ng-repeat="noti in notis">
-        <h2>{{noti.name}}</h2>
+      <a class="item" ng-repeat="noti in notis">
+        <h2>{{noti.lecture.course.title}}</h2>
+        <p>{{noti.content}}</p>
+      </a>
+
+      <a class="item item-icon-right" ng-repeat="noti in notis" href="#/tab/more/lectures/{{noti.lecture.id}}">
+        <h2>{{$index + 1}}. {{noti.lecture.course.name}}, {{noti.lecture.instructor.name}}</h2>
+        <p>{{noti.content}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </a>
 

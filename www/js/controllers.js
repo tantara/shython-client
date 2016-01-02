@@ -36,12 +36,18 @@ angular.module('starter.controllers', [])
 
 .controller('HomeCtrl', function($scope, $ionicPopup, LecturesService) {
   $scope.searchForm = {};
+  $scope.season = "";
   $scope.lectures = [];
   $scope.header = "";
+  $scope.abb = [];
+  $scope.notice = "";
 
   LecturesService.hot().then(function(res) {
     $scope.lectures = res.data.lectures;
     $scope.header = res.data.header;
+    $scope.abb = res.data.abb;
+    $scope.season = res.data.season;
+    $scope.notice = res.data.notice;
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -51,9 +57,13 @@ angular.module('starter.controllers', [])
   })
 
   $scope.search = function(form) {
+    if(form.query.length == 0) return;
     LecturesService.search(form.query).then(function(res) {
       $scope.lectures = res.data.lectures;
       $scope.header = res.data.header;
+      $scope.abb = res.data.abb;
+      $scope.season = res.data.season;
+      $scope.notice = res.data.notice;
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
         title: '에러',
@@ -85,8 +95,15 @@ angular.module('starter.controllers', [])
 })
 
 .controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope) {
+  $scope.tab = 1;
   $scope.lecture = {};
   $scope.remark = false;
+
+  $scope.tabChanged = function(tab) {
+    if($scope.tab != tab) {
+      $scope.tab = tab;
+    }
+  }
 
   $scope.openLecture = function(lecture) {
     var url = 'http://sugang.snu.ac.kr/sugang/cc/cc101.action?openSchyy=2015&openShtmFg=U000200002&openDetaShtmFg=U000300001&sbjtCd=' + lecture.course.code + '&ltNo=' + lecture.code + '&sugangFlag=P';
@@ -95,6 +112,7 @@ angular.module('starter.controllers', [])
 
   $scope.toggle = function(lectureId) {
     LecturesService.toggle(lectureId).then(function(res) {
+      $scope.lecture.isBookmarked = res.data.isBookmarked;
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
         title: '에러',
@@ -106,9 +124,10 @@ angular.module('starter.controllers', [])
 
   LecturesService.get($stateParams.lectureId).then(function(res) {
     $scope.lecture = res.data.lecture;
-	$scope.lecture.time_arr = $scope.lecture.time_str.split("/");
-	$scope.lecture.location_arr = $scope.lecture.location_str.split("/");
-	console.log($scope.lecture);
+    $scope.lecture.isBookmarked = res.data.isBookmarked;
+    $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
+    $scope.lecture.location_arr = $scope.lecture.location_str.split("/");
+    console.log($scope.lecture);
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -118,12 +137,14 @@ angular.module('starter.controllers', [])
   })
 })
 
-.controller('MoreCtrl', function($scope, UsersService, $ionicPopup, SERVER, $rootScope, $cordovaEmailComposer) {
+.controller('MoreCtrl', function($scope, UsersService, $ionicPopup, SERVER, $rootScope, $cordovaEmailComposer, AuthService) {
 
   $scope.options = {};
+  console.log(appVersion);
+  $scope.appVersion = appVersion;
 
   $scope.openHelp = function() {
-    $rootScope.openWebview(SERVER.host + '/help');
+    $rootScope.openWebview(SERVER.web + '/help');
   }
 
   $scope.sendMail = function() {

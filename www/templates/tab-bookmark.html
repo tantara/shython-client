@@ -5,8 +5,9 @@
         {{header}}
       </div>
 
-      <a class="item item-avatar item-icon-right" ng-repeat="lecture in lectures" href="#/tab/home/lectures/{{lecture.id}}">
-        <h2>{{lecture.name}}</h2>
+      <a class="item item-icon-right" ng-repeat="lecture in lectures" href="#/tab/bookmark/lectures/{{lecture.id}}">
+        <h2>{{$index + 1}}. {{lecture.course.name}}, {{lecture.instructor.name}}</h2>
+        <p>신청현황 <span>{{lecture.current}}/{{lecture.quota}}</span>, {{lecture.course.code}}({{lecture.code}})</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </a>
 

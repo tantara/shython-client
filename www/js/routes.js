@@ -82,6 +82,16 @@ angular.module('starter.routes', [])
     }
   })
 
+  .state('tab.more-lecture-detail', {
+    url: '/more/lectures/:lectureId',
+    views: {
+      'tab-more': {
+        templateUrl: 'templates/lecture-detail.html',
+        controller: 'LectureDetailCtrl'
+      }
+    }
+  })
+
   .state('tab.more', {
     url: '/more',
     views: {

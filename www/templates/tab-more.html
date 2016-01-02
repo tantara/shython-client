@@ -11,22 +11,24 @@
       <div class="item item-divider">
         설정
       </div>
-      <li class="item item-toggle">
+      <ion-toggle class="item" toggle-class="toggle-positive" ng-model="options.on" ng-change="change()">
         빈자리 알림 받기
-        <label class="toggle toggle-positive">
-          <input type="checkbox" ng-change="change()" ng-model="options.on">
-          <div class="track">
-            <div class="handle"></div>
-          </div>
-        </label>
-      </li>
+      </ion-toggle>
       <div class="item item-divider">
         정보
       </div>
       <li class="item">
-        마지막 업데이트
+        수강편람 마지막 업데이트
         <span class="item-note">
-          Grammy
+          {{options.updated_at}}
+        </span>
+      </li>
+      <li class="item">
+        앱 버전
+        <span class="item-note">
+          현재 버전 {{appVersion}}
+          <br>
+          최신 버전 {{options.latestVersion}}
         </span>
       </li>
       <div class="item item-divider">

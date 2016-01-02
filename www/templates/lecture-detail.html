@@ -1,52 +1,46 @@
-<ion-view>
+<ion-view cache-view="false">
   <ion-nav-title>{{lecture.course.name}} - {{lecture.instructor.name}}</ion-nav-title>
   <ion-nav-buttons side="right">
     <button class="button" ng-click="openLecture(lecture)">
       수강편람
     </button>
   </ion-nav-buttons>
-  <ion-content>
-	  <div class="card">
-		  <div class="item item-divider">
-			<h3>{{lecture.course.code}} - {{lecture.code}}</h3>
-			<h4>현 {{lecture.current}}명 / 정원 {{lecture.quota}}명</h4>
-		  </div>
-		  <div class="item item-text-wrap">
-			<ul class="list">
-			  <li class="item item-divider">
-				수업교실 / 시간
-			  </li>
-				<li class="item" ng-repeat="time in lecture.time_arr">
-					{{lecture.location_arr[$index]}} / {{time}}
-				</li>
-			  <li class="item item-divider">
-				직전 수강 신청 시간
-			  </li>
-			  <li class="item">데이터 없음</li>
-			  <li class="item item-divider">
-				직전 수강 취소 시간
-			  </li>
-			  <li class="item">데이터 없음</li>
-			  <li class="item item-divider">
-				즐겨찾기 등록 인원
-			  </li>
-			  <li class="item">데이터 없음</li>
-			  <li class="item item-divider">
-				즐겨찾기 등록
-			  </li>
+  <ion-content class="padding">
+    <div class="scroll">
+      <h4>현재 {{lecture.current}}명 / 정원 {{lecture.quota}}명</h4>
+      <p></p>
 
+      <div class="button-bar bar-stable">
+        <a class="button" ng-class="{'button-positive': tab==1}" ng-click="tabChanged(1)">정보</a>
+        <a class="button" ng-class="{'button-positive': tab==2}" ng-click="tabChanged(2)">통계</a>
+      </div>
 
-				  <li class="item item-toggle">
-				  <label class="toggle" ng-click="toggle(lecture.id)">
-					   <input type="checkbox">
-					   <div class="track">
-						 <div class="handle"></div>
-					   </div>
-					</label>
-				</li>
-			</ul>
-		</div>		
-	</div>
-
+      <div class="list" ng-show="tab == 1">
+        <li class="item item-divider">
+          강의실 / 시간
+        </li>
+        <li class="item" ng-repeat="time in lecture.time_arr">
+          {{lecture.location_arr[$index]}} / {{time}}
+        </li>
+      </div>
+      <div class="list" ng-show="tab == 2">
+        <li class="item item-divider">
+          직전 수강 신청 시간
+        </li>
+        <li class="item">데이터 없음</li>
+        <li class="item item-divider">
+          직전 수강 취소 시간
+        </li>
+        <li class="item">데이터 없음</li>
+        <li class="item item-divider">
+          즐겨찾기 등록 인원
+        </li>
+        <li class="item">데이터 없음</li>
+      </div>
+    </div>
   </ion-content>
+
+  <ion-footer-bar class="bar-stable bar bar-footer has-tabs">
+    <a class="button button-icon" ng-class="{'ion-ios-star-outline': !lecture.isBookmarked, 'ion-ios-star': lecture.isBookmarked, 'pressed': lecture.isBookmarked}" ng-click="toggle(lecture.id)"></a>
+  </ion-footer-bar>
 </ion-view>
