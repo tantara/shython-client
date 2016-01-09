@@ -71,7 +71,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       //Custom
       StatusBar.overlaysWebView(true);
       if(ionic.Platform.isIOS()) {
-        StatusBar.style(1)
+        StatusBar.styleLightContent();
       } else if(ionic.Platform.isAndroid()) {
         ionic.Platform.isFullScreen = true;
       }
@@ -97,6 +97,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
       AuthService.storeDeviceInfo(info);
 
+
       var push = PushNotification.init({
         android: {
           senderID: "607566472910",
@@ -118,9 +119,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       });
 
       push.on('notification', function(data) {
+              var info = data;
+              if(ionic.Platform.isIOS()) {
+              info = data.additionalData;
+              }
         var alertPopup = $ionicPopup.alert({
-          title: data.title,
-          template: data.message,
+          title: info.title,
+          template: info.message,
           okText: "확인"
         });
         // data.message,

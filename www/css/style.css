@@ -19,3 +19,14 @@
   line-height: 22px;
   min-height: 26px;
 }
+
+/* iOS Specific Overrides to fix logo overlap */
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader).item-input-inset .item-input-wrapper {
+  margin-top: -1px !important;
+}
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader).item-input-inset .button {
+  margin-top: -1px !important;
+}
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader).item-input-inset {
+  height: 50px;
+}
