@@ -15,6 +15,20 @@ angular.module('starter.services', [])
     });
   };
 
+  var hotLiked = function(q) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/lectures/hot/liked'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
   var search = function(q) {
     return $q(function(resolve, reject) {
       $http({
@@ -61,6 +75,7 @@ angular.module('starter.services', [])
     get: get,
     search: search,
     hot: hot,
+    hotLiked: hotLiked,
     toggle: toggle
   };
 })

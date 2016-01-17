@@ -12,4 +12,18 @@ angular.module('starter.directives', [])
       }
     });
   };
+})
+
+.directive('ngQuota', function() {
+  return function(scope, element, attrs) {
+    attrs.$observe('quota', function(val){
+      element.removeClass('assertive');
+      element.removeClass('balanced');
+      if(attrs.cur >= attrs.quota) {
+        element.addClass('assertive');
+      } else {
+        element.addClass('balanced');
+      }
+    });
+  };
 });

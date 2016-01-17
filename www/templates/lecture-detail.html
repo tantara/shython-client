@@ -7,7 +7,7 @@
   </ion-nav-buttons>
   <ion-content class="padding">
     <div class="scroll">
-      <h4>현재 {{lecture.current}}명 / 정원 {{lecture.quota}}명</h4>
+      <h4><ng-quota cur="{{lecture.current}}" quota="{{lecture.quota}}">현재 {{lecture.current}}명</ng-quota> / 정원 {{lecture.quota}}명</h4>
       <p></p>
 
       <div class="button-bar bar-stable">

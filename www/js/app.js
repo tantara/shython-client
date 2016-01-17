@@ -1,6 +1,6 @@
 var appVersion = "0.0.0";
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment'])
 
 .constant('AUTH_EVENTS', {
   notAuthenticated: 'auth-not-authenticated',
@@ -9,8 +9,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .constant('SERVER', {
   //host: 'http://192.186.0.6:3000',
-  //host: 'http://127.0.0.1:3000',
-  host: 'http://api-sugang.snu.ac',
+  host: 'http://127.0.0.1:3000',
+  //host: 'http://api-sugang.snu.ac',
   web: 'http://sugang.snu.ac',
 })
 

@@ -72,6 +72,16 @@ angular.module('starter.routes', [])
     }
   })
 
+  .state('tab.hot-lectures', {
+    url: '/bookmark/hot',
+    views: {
+      'tab-bookmark': {
+        templateUrl: 'templates/hot-lectures.html',
+        controller: 'HotLecturesCtrl'
+      }
+    }
+  })
+
   .state('tab.bookmark-lecture-detail', {
     url: '/bookmark/lectures/:lectureId',
     views: {

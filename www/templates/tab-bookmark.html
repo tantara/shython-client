@@ -1,4 +1,8 @@
 <ion-view view-title="즐겨찾기" cache-view="false">
+  <ion-nav-buttons side="right">
+    <a class="button icon ion-thumbsup" href="#/tab/bookmark/hot">
+    </a>
+  </ion-nav-buttons>
   <ion-content>
     <div class="list">
       <div class="item item-divider" ng-show="header.length > 0">
@@ -7,8 +11,12 @@
 
       <a class="item item-icon-right" ng-repeat="lecture in lectures" href="#/tab/bookmark/lectures/{{lecture.id}}">
         <h2>{{$index + 1}}. {{lecture.course.name}}, {{lecture.instructor.name}}</h2>
-        <p>신청현황 <span>{{lecture.current}}/{{lecture.quota}}</span>, {{lecture.course.code}}({{lecture.code}})</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
+        <p>신청현황 <ng-quota cur="{{lecture.current}}" quota="{{lecture.quota}}">{{lecture.current}}/{{lecture.quota}}</ng-quota>, {{lecture.course.code}}({{lecture.code}})</p>
+        <i class="icon icon-accessory last-history">
+          <span class="item-note" am-time-ago="lecture.last_history.created_at | toTime"></span>
+        </i>
+        <i class="icon ion-chevron-right icon-accessory">
+        </i>
       </a>
 
     </div>

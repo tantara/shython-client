@@ -30,3 +30,6 @@
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader).item-input-inset {
   height: 50px;
 }
+i.last-history {
+  padding-right: 25px;
+}

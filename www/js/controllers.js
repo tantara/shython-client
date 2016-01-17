@@ -40,28 +40,37 @@ angular.module('starter.controllers', [])
   $scope.lectures = [];
   $scope.header = "";
   $scope.abb = [];
+  $scope.abb_text = "";
+  $scope.abb_text = "";
   $scope.notice = "";
 
-  LecturesService.hot().then(function(res) {
-    $scope.lectures = res.data.lectures;
-    $scope.header = res.data.header;
-    $scope.abb = res.data.abb;
-    $scope.season = res.data.season;
-    $scope.notice = res.data.notice;
-  }, function(err) {
-    var alertPopup = $ionicPopup.alert({
-      title: '에러',
-      template: '정보를 가져오는데 문제가 생겼습니다.',
-      okText: "확인"
-    });
-  })
-
-  $scope.search = function(form) {
-    if(form.query.length == 0) return;
-    LecturesService.search(form.query).then(function(res) {
+  $scope.init = function() {
+    $scope.searchForm.query = "";
+    LecturesService.hot().then(function(res) {
       $scope.lectures = res.data.lectures;
       $scope.header = res.data.header;
       $scope.abb = res.data.abb;
+      $scope.abb_text = res.data.abb_text;
+      $scope.season = res.data.season;
+      $scope.notice = res.data.notice;
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
+  $scope.init();
+
+  $scope.search = function(query) {
+    if(query.length == 0) return;
+    $scope.searchForm.query = query;
+    LecturesService.search(query).then(function(res) {
+      $scope.lectures = res.data.lectures;
+      $scope.header = res.data.header;
+      $scope.abb = res.data.abb;
+      $scope.abb_text = res.data.abb_text;
       $scope.season = res.data.season;
       $scope.notice = res.data.notice;
     }, function(err) {
@@ -85,6 +94,22 @@ angular.module('starter.controllers', [])
     } else {
       $scope.header = "";
     }
+  }, function(err) {
+    var alertPopup = $ionicPopup.alert({
+      title: '에러',
+      template: '정보를 가져오는데 문제가 생겼습니다.',
+      okText: "확인"
+    });
+  })
+})
+
+.controller('HotLecturesCtrl', function($scope, $ionicPopup, LecturesService) {
+  $scope.lectures = [];
+  $scope.header = "";
+
+  LecturesService.hotLiked().then(function(res) {
+    $scope.lectures = res.data.lectures;
+    $scope.header = res.data.header;
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
