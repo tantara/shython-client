@@ -71,12 +71,28 @@ angular.module('starter.services', [])
     });
   };
 
+  var register = function(data) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'POST',
+        url: SERVER.host + '/api/v1/lectures/register',
+        data: data
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
   return {
     get: get,
     search: search,
     hot: hot,
     hotLiked: hotLiked,
-    toggle: toggle
+    toggle: toggle,
+    register: register
   };
 })
 
@@ -137,12 +153,12 @@ angular.module('starter.services', [])
     });
   };
 
-  var editOptions = function(options) {
+  var editOptions = function(options, uuid, device) {
     return $q(function(resolve, reject) {
       $http({
         method: 'PUT',
         url: SERVER.host + '/api/v1/users/me/options',
-        data: {device: options}
+        data: {device: options, uuid: uuid, device_info: device}
       }).then(function successCallback(response) {
         console.log(response);
         resolve(response);

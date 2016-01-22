@@ -1,6 +1,6 @@
 <ion-view view-title="{{season}}">
-  <ion-nav-buttons side="left">
-    <a ng-show="searchForm.query.length > 0" class="button icon ion-close" ng-click="init()">
+  <ion-nav-buttons side="right">
+    <a ng-show="mode=='search'" class="button icon ion-close" ng-click="init()">
     </a>
   </ion-nav-buttons>
   <ion-content>
@@ -14,11 +14,17 @@
       </button>
     </div>
 
-    <div class="row" ng-show="abb.length > 0">
-      <button class="button button-clear button-xsmall button-dark">{{abb_text}}</button>
+    <div class="padding padding-abb" ng-show="abb.length > 0">
+      <button class="button button-clear button-xsmall button-dark">{{abbText}}</button>
       <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb" ng-click="search(a)">
         {{a}}
       </button>
+      <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-show="mode=='search'">축약어 추가하기</button>
+    </div>
+
+    <div class="padding padding-abb" ng-show="abb.length == 0 && abbText.length > 0">
+      <button class="button button-clear button-xsmall button-dark">{{abbText}}</button>
+      <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-show="mode=='search'">축약어 추가하기</button>
     </div>
 
     <div class="list">

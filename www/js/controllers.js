@@ -4,6 +4,8 @@ angular.module('starter.controllers', [])
 })
 
 .controller('IntroCtrl', function($scope, $state, AuthService, $ionicPopup, $stateParams, $window, AuthService, UsersService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Intro Controller"); }
+
   function makeKey()
   {
     var text = "";
@@ -35,22 +37,26 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope, $ionicPopup, LecturesService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Home Controller"); }
+
   $scope.searchForm = {};
   $scope.season = "";
   $scope.lectures = [];
   $scope.header = "";
   $scope.abb = [];
-  $scope.abb_text = "";
-  $scope.abb_text = "";
+  $scope.abbText = "";
   $scope.notice = "";
+  $scope.mode = "hot";
+  $scope.lastQuery = "";
 
   $scope.init = function() {
     $scope.searchForm.query = "";
     LecturesService.hot().then(function(res) {
+      $scope.mode = "hot";
       $scope.lectures = res.data.lectures;
       $scope.header = res.data.header;
       $scope.abb = res.data.abb;
-      $scope.abb_text = res.data.abb_text;
+      $scope.abbText = res.data.abb_text;
       $scope.season = res.data.season;
       $scope.notice = res.data.notice;
     }, function(err) {
@@ -66,11 +72,13 @@ angular.module('starter.controllers', [])
   $scope.search = function(query) {
     if(query.length == 0) return;
     $scope.searchForm.query = query;
+    $scope.lastQuery = query;
     LecturesService.search(query).then(function(res) {
+      $scope.mode = "search";
       $scope.lectures = res.data.lectures;
       $scope.header = res.data.header;
       $scope.abb = res.data.abb;
-      $scope.abb_text = res.data.abb_text;
+      $scope.abbText = res.data.abb_text;
       $scope.season = res.data.season;
       $scope.notice = res.data.notice;
     }, function(err) {
@@ -81,9 +89,55 @@ angular.module('starter.controllers', [])
       });
     })
   };
+
+  $scope.showAbbModal = function() {
+    $scope.data = {query: $scope.lastQuery};
+    var myPopup = $ionicPopup.show({
+      template: '<input type="text" ng-model="data.abb">',
+      title: "'" + $scope.data.query + "'의 축약어를 입력해주세요",
+      subTitle: '축약어를 등록하면 해당 축약어로 검색이 가능합니다',
+      scope: $scope,
+      buttons: [
+        { text: '취소' },
+        {
+          text: '<b>등록</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.data.abb) {
+              //don't allow the user to close unless he enters wifi password
+              e.preventDefault();
+            } else {
+              return $scope.data.abb;
+            }
+          }
+        }
+      ]
+    });
+
+    myPopup.then(function(res) {
+      console.log('Tapped!', res);
+      if(res != undefined) {
+        LecturesService.register($scope.data).then(function(res) {
+          var alertPopup = $ionicPopup.alert({
+            title: '안내',
+            template: '등록되었습니다',
+            okText: "확인"
+          });
+        }, function(err) {
+          var alertPopup = $ionicPopup.alert({
+            title: '에러',
+            template: '정보를 가져오는데 문제가 생겼습니다.',
+            okText: "확인"
+          });
+        })
+      }
+    });
+  };
 })
 
 .controller('BookmarkCtrl', function($scope, $ionicPopup, UsersService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Bookmark Controller"); }
+
   $scope.lectures = [];
   $scope.header = "";
 
@@ -104,6 +158,8 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HotLecturesCtrl', function($scope, $ionicPopup, LecturesService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Hot Lectures Controller"); }
+
   $scope.lectures = [];
   $scope.header = "";
 
@@ -120,6 +176,8 @@ angular.module('starter.controllers', [])
 })
 
 .controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Lecture Detail Controller"); }
+
   $scope.tab = 1;
   $scope.lecture = {};
   $scope.remark = false;
@@ -150,6 +208,7 @@ angular.module('starter.controllers', [])
   LecturesService.get($stateParams.lectureId).then(function(res) {
     $scope.lecture = res.data.lecture;
     $scope.lecture.isBookmarked = res.data.isBookmarked;
+    $scope.lecture.bookmarkCount = res.data.bookmark_count;
     $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
     $scope.lecture.location_arr = $scope.lecture.location_str.split("/");
     console.log($scope.lecture);
@@ -163,6 +222,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MoreCtrl', function($scope, UsersService, $ionicPopup, SERVER, $rootScope, $cordovaEmailComposer, AuthService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("More Controller"); }
 
   $scope.options = {};
   console.log(appVersion);
@@ -212,7 +272,9 @@ angular.module('starter.controllers', [])
   });
 
   $scope.change = function() {
-    UsersService.editOptions($scope.options).then(function(res) {
+    var uuid = AuthService.loadPushToken();
+    var device = AuthService.loadDeviceInfo();
+    UsersService.editOptions($scope.options, uuid, device).then(function(res) {
       var alertPopup = $ionicPopup.alert({
         title: '안내',
         template: res.data.msg,
@@ -230,6 +292,8 @@ angular.module('starter.controllers', [])
 })
 
 .controller('NotiCtrl', function($scope, $ionicPopup, UsersService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Noti Controller"); }
+
   $scope.notis = [];
   $scope.header = "";
 
@@ -240,6 +304,8 @@ angular.module('starter.controllers', [])
     } else {
       $scope.header = "";
     }
+    console.log($scope.notis);
+    console.log($scope.header);
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',

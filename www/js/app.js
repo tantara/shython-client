@@ -8,13 +8,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  //host: 'http://192.186.0.6:3000',
-  host: 'http://127.0.0.1:3000',
+  host: 'http://192.168.0.7:3000',
   //host: 'http://api-sugang.snu.ac',
   web: 'http://sugang.snu.ac',
 })
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);
@@ -56,6 +55,40 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       $window.open(url);
     }
   }
+
+  $ionicPlatform.ready(function() {
+    if(typeof analytics !== "undefined") {
+      if(ionic.Platform.isIOS()) {
+        analytics.startTrackerWithId("UA-71864537-2");
+      } else if(ionic.Platform.isAndroid()) {
+        analytics.startTrackerWithId("UA-71864537-3");
+        analytics.trackView('whatever');
+      }
+    } else {
+      console.log("Google Analytics Unavailable");
+    }
+  });
+
+  $ionicPlatform.registerBackButtonAction(function(e){
+    if ($rootScope.backButtonPressedOnceToExit) {
+      ionic.Platform.exitApp();
+    }
+    else if ($ionicHistory.backView()) {
+      $ionicHistory.goBack();
+    }
+    else {
+      $rootScope.backButtonPressedOnceToExit = true;
+      ionic.Platform.exitApp(); // FIXME
+      //window.plugins.toast.showShortCenter(
+      //  "Press back button again to exit",function(a){},function(b){}
+      //);
+      //setTimeout(function(){
+      //  $rootScope.backButtonPressedOnceToExit = false;
+      //},2000);
+    }
+    e.preventDefault();
+    return false;
+  },101);
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
