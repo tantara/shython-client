@@ -1,4 +1,4 @@
-var appVersion = "0.0.0";
+var appVersion = "1.0.2";
 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment'])
 
@@ -56,6 +56,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   }
 
+  $rootScope.openReview = function() {
+    var customLocale = {};
+    customLocale.title = "샤이썬의 리뷰를 작성해주세요";
+    customLocale.message = "안녕하세요. 샤이썬 개발자입니다. 샤이썬을 이용해보신 소감이 어떠신가요? 도움이 되셨거나 개선 사항이 있으면 리뷰 작성을 부탁 드립니다! 길어도 1분이면 작성하실 수 있을 것입니다. 샤이썬을 이용해주셔서 감사합니다 :)";
+    customLocale.cancelButtonLabel = "괜찮아요";
+    customLocale.laterButtonLabel = "나중에 할래요";
+    customLocale.rateButtonLabel = "지금 쓰러가기";
+
+    AppRate.preferences.openStoreInApp = true;
+    AppRate.preferences.storeAppURL.ios = '1071743994';
+    AppRate.preferences.storeAppURL.android = 'market://details?id=com.shython.sandbox';
+    AppRate.preferences.customLocale = customLocale;
+    AppRate.preferences.displayAppName = '샤이썬: 수강신청 도우미';
+    AppRate.preferences.usesUntilPrompt = 5;
+    AppRate.preferences.promptAgainForEachNewVersion = true;
+    AppRate.promptForRating();
+  }
+
   $ionicPlatform.ready(function() {
     if(typeof analytics !== "undefined") {
       if(ionic.Platform.isIOS()) {
@@ -66,6 +84,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     } else {
       console.log("Google Analytics Unavailable");
+    }
+
+    if(ionic.Platform.isWebView()) {
+      $rootScope.openReview();
     }
   });
 
@@ -152,15 +174,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       });
 
       push.on('notification', function(data) {
-              var info = data;
-              if(ionic.Platform.isIOS()) {
-              info = data.additionalData;
-              }
-        var alertPopup = $ionicPopup.alert({
-          title: info.title,
-          template: info.message,
-          okText: "확인"
-        });
+        var info = data;
+        if(ionic.Platform.isIOS()) {
+          info = data.additionalData;
+        }
+        if(info.action == "review") {
+          $rootScope.openReview();
+        } else {
+          var alertPopup = $ionicPopup.alert({
+            title: info.title,
+            template: info.message,
+            okText: "확인"
+          });
+        }
         // data.message,
         // data.title,
         // data.count,
@@ -203,4 +229,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .config(function($ionicConfigProvider) {
   //$ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.views.swipeBackEnabled(false);
+  $ionicConfigProvider.backButton.text('');
 })

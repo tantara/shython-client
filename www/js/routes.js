@@ -72,7 +72,7 @@ angular.module('starter.routes', [])
     }
   })
 
-  .state('tab.hot-lectures', {
+  .state('tab.bookmark-hot-lectures', {
     url: '/bookmark/hot',
     views: {
       'tab-bookmark': {
@@ -102,6 +102,36 @@ angular.module('starter.routes', [])
     }
   })
 
+  .state('tab.market', {
+    url: '/market',
+    views: {
+      'tab-market': {
+        templateUrl: 'templates/tab-market.html',
+        controller: 'MarketCtrl'
+      }
+    }
+  })
+
+  .state('tab.market-create-post', {
+    url: '/market/create',
+    views: {
+      'tab-market': {
+        templateUrl: 'templates/post-create.html',
+        controller: 'CreatePostCtrl'
+      }
+    }
+  })
+
+  .state('tab.market-post-detail', {
+    url: '/market/:postId',
+    views: {
+      'tab-market': {
+        templateUrl: 'templates/post-detail.html',
+        controller: 'PostDetailCtrl'
+      }
+    }
+  })
+
   .state('tab.more', {
     url: '/more',
     views: {
@@ -112,7 +142,17 @@ angular.module('starter.routes', [])
     }
   })
 
-  .state('tab.noti', {
+  .state('tab.more-auto', {
+    url: '/more/auto',
+    views: {
+      'tab-more': {
+        templateUrl: 'templates/more-auto.html',
+        controller: 'AutoCtrl'
+      }
+    }
+  })
+
+  .state('tab.more-noti', {
     url: '/more/noti',
     views: {
       'tab-more': {

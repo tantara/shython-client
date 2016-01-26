@@ -123,6 +123,7 @@ angular.module('starter.controllers', [])
             template: '등록되었습니다',
             okText: "확인"
           });
+          $scope.search($scope.lastQuery);
         }, function(err) {
           var alertPopup = $ionicPopup.alert({
             title: '에러',
@@ -221,6 +222,89 @@ angular.module('starter.controllers', [])
   })
 })
 
+.controller('CreatePostCtrl', function($scope, $ionicPopup, PostsService, $ionicHistory) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Create Post Controller"); }
+
+  $scope.form = {};
+
+  $scope.write = function() {
+    PostsService.register($scope.form).then(function(res) {
+      var alertPopup = $ionicPopup.alert({
+        title: '안내',
+        template: '등록되었습니다',
+        okText: "확인"
+      });
+      $ionicHistory.goBack();
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  };
+})
+
+.controller('PostDetailCtrl', function($scope, $ionicPopup, PostsService, $stateParams, $window) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Post Detail Controller"); }
+  
+  $scope.post = {};
+
+  $scope.contact = function() {
+    if($scope.post.link) {
+      $window.open($scope.open.link, '_system', 'location=yes');
+    } else {
+      var alertPopup = $ionicPopup.alert({
+        title: '안내',
+        template: '등록된 연락처가 없습니다.',
+        okText: "확인"
+      });
+    }
+  }
+
+  PostsService.get($stateParams.postId).then(function(res) {
+    $scope.post = res.data.post;
+  }, function(err) {
+    var alertPopup = $ionicPopup.alert({
+      title: '에러',
+      template: '정보를 가져오는데 문제가 생겼습니다.',
+      okText: "확인"
+    });
+  })
+})
+
+.controller('MarketCtrl', function($scope, $ionicPopup, PostsService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Market Controller"); }
+
+  $scope.canBeLoaded = true;
+  $scope.lastId = 0;
+  $scope.posts = [];
+  $scope.header = "";
+
+  $scope.loadMore = function() {
+    PostsService.getLatest($scope.lastId).then(function(res) {
+      $scope.canBeLoaded = res.data.load_more;
+      $scope.posts = res.data.posts;
+      if($scope.posts.length > 0) {
+        $scope.lastId = $scope.posts[$scope.posts.length - 1].id;
+      }
+      if($scope.posts.length == 0) {
+        $scope.header = "교환이 가능한 강의가 없습니다.";
+      } else {
+        $scope.header = "";
+      }
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    })
+  }
+})
+
 .controller('MoreCtrl', function($scope, UsersService, $ionicPopup, SERVER, $rootScope, $cordovaEmailComposer, AuthService) {
   if(typeof analytics !== "undefined") { analytics.trackView("More Controller"); }
 
@@ -287,6 +371,31 @@ angular.module('starter.controllers', [])
         template: '정보를 가져오는데 문제가 생겼습니다.',
         okText: "확인"
       });
+    });
+  }
+})
+
+.controller('AutoCtrl', function($scope, $ionicPopup, AuthService) {
+  if(typeof analytics !== "undefined") { analytics.trackView("Auto Controller"); }
+
+  $scope.form = AuthService.tmpLoad();
+
+  $scope.init = function() {
+    $scope.form = {id: '', password: ''};
+    AuthService.tmpInit();
+    var alertPopup = $ionicPopup.alert({
+      title: '안내',
+      template: '자동 로그인 정보가 초기화되었습니다.',
+      okText: "확인"
+    });
+  }
+
+  $scope.save = function() {
+    AuthService.tmpSave($scope.form.id, $scope.form.password);
+    var alertPopup = $ionicPopup.alert({
+      title: '안내',
+      template: '자동 로그인 정보가 저장되었습니다.',
+      okText: "확인"
     });
   }
 })

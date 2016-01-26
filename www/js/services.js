@@ -1,7 +1,58 @@
 angular.module('starter.services', [])
 
+.service('PostsService', function($q, $http, SERVER) {
+  var get = function(postId) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/posts/' + postId
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  var getLatest = function(lastId) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/posts/latest?last_id=' + lastId
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  var register = function(data) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'POST',
+        url: SERVER.host + '/api/v1/posts',
+        data: data
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  return {
+    getLatest: getLatest,
+    get: get,
+    register: register
+  }
+})
+
 .service('LecturesService', function($q, $http, SERVER) {
-  var hot = function(q) {
+  var hot = function() {
     return $q(function(resolve, reject) {
       $http({
         method: 'GET',
@@ -15,7 +66,7 @@ angular.module('starter.services', [])
     });
   };
 
-  var hotLiked = function(q) {
+  var hotLiked = function() {
     return $q(function(resolve, reject) {
       $http({
         method: 'GET',
@@ -197,6 +248,8 @@ angular.module('starter.services', [])
   var LOCAL_DEVICE_INFO_KEY = 'yourDeviceInfoKey';
   var LOCAL_PUSH_TOKEN_KEY = 'yourPushTokenKey';
   var LOCAL_USER_INFO_KEY = 'yourUserInfoKey';
+  var LOCAL_TMP_ID = 'tmpId';
+  var LOCAL_TMP_PASSWORD = 'tmpPassword';
   var isAuthenticated = false;
   var role = '';
   var authToken;
@@ -251,6 +304,23 @@ angular.module('starter.services', [])
     window.localStorage.removeItem(LOCAL_TOKEN_KEY);
   }
 
+  function tmpSave(id, password) {
+    window.localStorage.setItem(LOCAL_TMP_ID, id);
+    window.localStorage.setItem(LOCAL_TMP_PASSWORD, password);
+  }
+
+  function tmpLoad(id, password) {
+    return {
+      id: window.localStorage.getItem(LOCAL_TMP_ID),
+      password: window.localStorage.getItem(LOCAL_TMP_PASSWORD)
+    }
+  }
+
+  function tmpInit() {
+    window.localStorage.removeItem(LOCAL_TMP_ID);
+    window.localStorage.removeItem(LOCAL_TMP_PASSWORD);
+  }
+
   var start = function(user) {
     return $q(function(resolve, reject) {
       $http({
@@ -277,6 +347,9 @@ angular.module('starter.services', [])
   loadUserCredentials();
 
   return {
+    tmpSave: tmpSave,
+    tmpLoad: tmpLoad,
+    tmpInit: tmpInit,
     start: start,
     storeDeviceInfo: storeDeviceInfo,
     loadDeviceInfo: loadDeviceInfo,
@@ -311,4 +384,20 @@ angular.module('starter.services', [])
 
 .config(function ($httpProvider) {
   $httpProvider.interceptors.push('AuthInterceptor');
+
+  var agentString = "Shython 0.9.1 (Android 5.1.1; ko; a3abba76-e795-496f-9510-30b9962de562; SM-G920S)";
+  var agentString = "Shython " + appVersion;
+
+  var deviceInfoString = "";
+  if(ionic.Platform.isIOS()) {
+    deviceInfoString += "iOS " + ionic.Platform.version();
+  } else if(ionic.Platform.isAndroid()) {
+    deviceInfoString += "Android " + ionic.Platform.version();
+  } else {
+    deviceInfoString = navigator.userAgent;
+  }
+
+  agentString = agentString + " (" + deviceInfoString + ")";
+
+  $httpProvider.defaults.headers.common['X-AGENT'] = agentString;
 })
