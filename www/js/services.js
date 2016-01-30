@@ -261,6 +261,11 @@ angular.module('starter.services', [])
     }
   }
 
+  function getUserCredentials() {
+    var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
+    return token;
+  }
+
   function storeUserCredentials(token) {
     window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
     useCredentials(token);
@@ -351,6 +356,7 @@ angular.module('starter.services', [])
     tmpLoad: tmpLoad,
     tmpInit: tmpInit,
     start: start,
+    getUserCredentials: getUserCredentials,
     storeDeviceInfo: storeDeviceInfo,
     loadDeviceInfo: loadDeviceInfo,
     storePushToken: storePushToken,

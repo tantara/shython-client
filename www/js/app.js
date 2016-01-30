@@ -8,8 +8,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  host: 'http://192.168.0.7:3000',
-  //host: 'http://api-sugang.snu.ac',
+  //host: 'http://192.168.0.7:3000',
+  host: 'http://api-sugang.snu.ac',
   web: 'http://sugang.snu.ac',
 })
 

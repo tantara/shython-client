@@ -19,7 +19,9 @@ angular.module('starter.directives', [])
     attrs.$observe('quota', function(val){
       element.removeClass('assertive');
       element.removeClass('balanced');
-      if(attrs.cur >= attrs.quota) {
+      var cur = parseInt(attrs.cur);
+      var quota = parseInt(attrs.quota);
+      if(cur >= quota) {
         element.addClass('assertive');
       } else {
         element.addClass('balanced');

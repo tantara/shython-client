@@ -317,32 +317,43 @@ angular.module('starter.controllers', [])
   }
 
   $scope.sendMail = function() {
-    $cordovaEmailComposer.isAvailable().then(function() {
-      // is available
-      var info = JSON.parse(AuthService.loadDeviceInfo());
-      var infoStr = '<br>platform: ' + info.platform;
-      infoStr += '<br>model: ' + info.model;
-      infoStr += '<br>version: ' + info.version;
-      infoStr += '<br>appVersion: ' + appVersion; 
+    if(ionic.Platform.isWebView()) {
+      $cordovaEmailComposer.isAvailable().then(function() {
+        // is available
+        var info = JSON.parse(AuthService.loadDeviceInfo());
+        var token = AuthService.getUserCredentials();
 
-      var email = {
-        to: 'help.shython@gmail.com',
-        subject: '[문의] 샤이썬에 문의합니다.',
-        body: '버그 제보 혹은 기능 제안을 해주세요.<br><br><br>' + infoStr,
-        isHtml: true
-      };
+        var infoStr = '<br>platform: ' + info.platform;
+        infoStr += '<br>model: ' + info.model;
+        infoStr += '<br>version: ' + info.version;
+        infoStr += '<br>appVersion: ' + appVersion; 
+        infoStr += '<br>ID: ' + token; 
 
-      $cordovaEmailComposer.open(email).then(null, function () {
-        // user cancelled email
+        var email = {
+          to: 'help.shython@gmail.com',
+          subject: '[문의] 샤이썬에 문의합니다.',
+          body: '버그 제보 혹은 기능 제안을 해주세요.<br><br><br>' + infoStr,
+          isHtml: true
+        };
+
+        $cordovaEmailComposer.open(email).then(null, function () {
+          // user cancelled email
+        });
+      }, function () {
+        // not available
+        var alertPopup = $ionicPopup.alert({
+          title: '안내',
+          template: 'help.shython@gmail.com로 메일을 보내주세요.',
+          okText: "확인"
+        });
       });
-    }, function () {
-      // not available
+    } else {
       var alertPopup = $ionicPopup.alert({
         title: '안내',
         template: 'help.shython@gmail.com로 메일을 보내주세요.',
         okText: "확인"
       });
-    });
+    }
   }
 
   UsersService.getOptions().then(function(res) {
