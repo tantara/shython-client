@@ -40,8 +40,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   $rootScope.openWebview = function(url) {
     if(ionic.Platform.isWebView()) {
       var options = {
-        location: 'no',
-        clearcache: 'yes',
+        location: 'yes',
+        clearcache: 'no',
         toolbar: 'yes'
       };
       $cordovaInAppBrowser.open(url, '_blank', options)
@@ -152,7 +152,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
       AuthService.storeDeviceInfo(info);
 
-
       var push = PushNotification.init({
         android: {
           senderID: "607566472910",
@@ -180,6 +179,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
         if(info.action == "review") {
           $rootScope.openReview();
+          AppRate.promptForRating(true);
+        } else if(info.action == "url") {
+          $rootScope.openWebview(info.url);
         } else {
           var alertPopup = $ionicPopup.alert({
             title: info.title,

@@ -1,13 +1,11 @@
 <ion-view cache-view="false">
   <ion-nav-title>{{lecture.course.name}} - {{lecture.instructor.name}}</ion-nav-title>
   <ion-nav-buttons side="right">
-    <button class="button" ng-click="openLecture(lecture)">
-      수강편람
-    </button>
+    <a class="button button-icon" ng-class="{'ion-ios-star-outline': !lecture.isBookmarked, 'ion-ios-star': lecture.isBookmarked}" ng-click="toggle(lecture.id)"></a>
   </ion-nav-buttons>
   <ion-content class="padding">
     <div class="scroll">
-      <h4><ng-quota cur="{{lecture.current}}" quota="{{lecture.quota}}">현재 {{lecture.current}}명</ng-quota> / 정원 {{lecture.quota}}명</h4>
+      <h4><ng-quota cur="{{lecture.current}}" quota="{{lecture.current_quota}}">현재 {{lecture.current}}명</ng-quota> / 정원 {{lecture.quota}}명<span ng-show="lecture.quota != lecture.current_quota">(재학생 {{lecture.current_quota}}명)</span></h4>
       <p></p>
 
       <div class="button-bar bar-stable">
@@ -43,6 +41,14 @@
   </ion-content>
 
   <ion-footer-bar class="bar-stable bar bar-footer has-tabs">
-    <a class="button button-icon" ng-class="{'ion-ios-star-outline': !lecture.isBookmarked, 'ion-ios-star': lecture.isBookmarked, 'pressed': lecture.isBookmarked}" ng-click="toggle(lecture.id)"></a>
+    <button class="button" ng-click="openLecture(lecture)">
+      수강편람보기
+    </button>
+    <button class="button" ng-click="sendMail(lecture)">
+      초안지쓰기
+    </button>
+    <button class="button" ng-click="registerLecture(lecture)">
+      수강신청하기
+    </button>
   </ion-footer-bar>
 </ion-view>

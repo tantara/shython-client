@@ -250,6 +250,7 @@ angular.module('starter.services', [])
   var LOCAL_USER_INFO_KEY = 'yourUserInfoKey';
   var LOCAL_TMP_ID = 'tmpId';
   var LOCAL_TMP_PASSWORD = 'tmpPassword';
+  var LOCAL_TMP_TIME = 'tmpTime';
   var isAuthenticated = false;
   var role = '';
   var authToken;
@@ -309,15 +310,35 @@ angular.module('starter.services', [])
     window.localStorage.removeItem(LOCAL_TOKEN_KEY);
   }
 
+  function tmpTimeSave(time) {
+    window.localStorage.setItem(LOCAL_TMP_TIME, time);
+  }
+
+  function tmpTimeLoad() {
+    var time = window.localStorage.getItem(LOCAL_TMP_TIME);
+    if(time == undefined) {
+      time = 0;
+    }
+    return parseInt(time);
+  }
+
+  function tmpTimeInit() {
+    window.localStorage.removeItem(LOCAL_TMP_TIME);
+  }
+
   function tmpSave(id, password) {
     window.localStorage.setItem(LOCAL_TMP_ID, id);
     window.localStorage.setItem(LOCAL_TMP_PASSWORD, password);
   }
 
   function tmpLoad(id, password) {
+    var id = window.localStorage.getItem(LOCAL_TMP_ID);
+    var password = window.localStorage.getItem(LOCAL_TMP_PASSWORD);
+    if(id == undefined) id = '';
+    if(password == undefined) password = '';
     return {
-      id: window.localStorage.getItem(LOCAL_TMP_ID),
-      password: window.localStorage.getItem(LOCAL_TMP_PASSWORD)
+      id: id,
+      password: password
     }
   }
 
@@ -352,6 +373,9 @@ angular.module('starter.services', [])
   loadUserCredentials();
 
   return {
+    tmpTimeSave: tmpTimeSave,
+    tmpTimeLoad: tmpTimeLoad,
+    tmpTimeInit: tmpTimeInit,
     tmpSave: tmpSave,
     tmpLoad: tmpLoad,
     tmpInit: tmpInit,
