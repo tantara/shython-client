@@ -49,8 +49,8 @@ angular.module('starter.controllers', [])
   $scope.mode = "hot";
   $scope.lastQuery = "";
   $scope.banner = {};
-  $scope.banner.image = "https://ssl.pstatic.net/sstatic/keypage/outside/scui/chuseok_2015/img/bg_banner.png";
-  $scope.banner.url = "http://naver.com"
+  //$scope.banner.image = "https://ssl.pstatic.net/sstatic/keypage/outside/scui/chuseok_2015/img/bg_banner.png";
+  //$scope.banner.url = "http://naver.com"
 
   $scope.doRefresh = function() {
     if($scope.lastQuery.length == 0) {
