@@ -48,8 +48,20 @@ angular.module('starter.controllers', [])
   $scope.notice = "";
   $scope.mode = "hot";
   $scope.lastQuery = "";
+  $scope.banner = {};
+  $scope.banner.image = "https://ssl.pstatic.net/sstatic/keypage/outside/scui/chuseok_2015/img/bg_banner.png";
+  $scope.banner.url = "http://naver.com"
+
+  $scope.doRefresh = function() {
+    if($scope.lastQuery.length == 0) {
+      $scope.init();
+    } else {
+      $scope.search($scope.lastQuery);
+    }
+  }
 
   $scope.init = function() {
+    $scope.lastQuery = "";
     $scope.searchForm.query = "";
     LecturesService.hot().then(function(res) {
       $scope.mode = "hot";
@@ -59,7 +71,10 @@ angular.module('starter.controllers', [])
       $scope.abbText = res.data.abb_text;
       $scope.season = res.data.season;
       $scope.notice = res.data.notice;
+      $scope.banner = res.data.banner;
+      $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
+      $scope.$broadcast('scroll.refreshComplete');
       var alertPopup = $ionicPopup.alert({
         title: '에러',
         template: '정보를 가져오는데 문제가 생겼습니다.',
@@ -81,7 +96,10 @@ angular.module('starter.controllers', [])
       $scope.abbText = res.data.abb_text;
       $scope.season = res.data.season;
       $scope.notice = res.data.notice;
+      $scope.banner = res.data.banner;
+      $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
+      $scope.$broadcast('scroll.refreshComplete');
       var alertPopup = $ionicPopup.alert({
         title: '에러',
         template: '정보를 가져오는데 문제가 생겼습니다.',
@@ -141,21 +159,34 @@ angular.module('starter.controllers', [])
 
   $scope.lectures = [];
   $scope.header = "";
+  $scope.recommend_lectures = [];
+  $scope.recommend_header = "";
 
-  UsersService.getBookmark().then(function(res) {
-    $scope.lectures = res.data.lectures;
-    if($scope.lectures.length == 0) {
-      $scope.header = "즐겨찾기한 강좌가 없습니다.";
-    } else {
-      $scope.header = "";
-    }
-  }, function(err) {
-    var alertPopup = $ionicPopup.alert({
-      title: '에러',
-      template: '정보를 가져오는데 문제가 생겼습니다.',
-      okText: "확인"
-    });
-  })
+  $scope.doRefresh = function() {
+    $scope.init();
+  }
+
+  $scope.init = function() {
+    UsersService.getBookmark().then(function(res) {
+      $scope.lectures = res.data.lectures;
+      if($scope.lectures.length == 0) {
+        $scope.header = "즐겨찾기한 강좌가 없습니다.";
+      } else {
+        $scope.header = "";
+      }
+      $scope.recommend_lectures = res.data.recommend_lectures;
+      $scope.recommend_header = res.data.recommend_header;
+      $scope.$broadcast('scroll.refreshComplete');
+    }, function(err) {
+      $scope.$broadcast('scroll.refreshComplete');
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
+  $scope.init();
 })
 
 .controller('HotLecturesCtrl', function($scope, $ionicPopup, LecturesService) {
@@ -164,16 +195,25 @@ angular.module('starter.controllers', [])
   $scope.lectures = [];
   $scope.header = "";
 
-  LecturesService.hotLiked().then(function(res) {
-    $scope.lectures = res.data.lectures;
-    $scope.header = res.data.header;
-  }, function(err) {
-    var alertPopup = $ionicPopup.alert({
-      title: '에러',
-      template: '정보를 가져오는데 문제가 생겼습니다.',
-      okText: "확인"
-    });
-  })
+  $scope.doRefresh = function() {
+    $scope.init();
+  }
+
+  $scope.init = function() {
+    LecturesService.hotLiked().then(function(res) {
+      $scope.lectures = res.data.lectures;
+      $scope.header = res.data.header;
+      $scope.$broadcast('scroll.refreshComplete');
+    }, function(err) {
+      $scope.$broadcast('scroll.refreshComplete');
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
+  $scope.init();
 })
 
 .controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope, AuthService, $cordovaInAppBrowser, $cordovaEmailComposer) {
@@ -207,21 +247,26 @@ angular.module('starter.controllers', [])
           });
 
           alertPopup.then(function(res) {
-            var subject = lecture.course.name + ' 수강을 희망하는 컴퓨터공학부 학생입니다.'
-            var body = `
-              안녕하세요. ` + lecture.instructor.name + '교수님.' + `
-              <br>
-              저는 이번 학기에 ` + lecture.course.name + '의 수업을 듣고 싶은 컴퓨터공학부 학생입니다.' + `
-              해당 과목에 수강생이 몰려서 수강신청을 하지 못했습니다.
-              <br>
-              혹시 자리가 남는다면 초안지를 신청해도 될까요??
-              <br>
-              끝까지 읽어주셔서 감사합니다!!
-            `
+            var subject = lecture.course.name + ' 수업 수강을 희망하는 컴퓨터공학부 학생입니다.'
+            var body = "[예시]\n" +
+              "<br>\n" +
+              "<br>\n" +
+              "안녕하세요. " + lecture.instructor.name + "교수님.\n" +
+              "<br>\n" +
+              "<br>\n" +
+              "저는 이번 학기에 " + lecture.course.name + "의 수업을 듣고 싶은 컴퓨터공학부 학생입니다.\n" +
+              "<br>\n" +
+              "해당 과목에 수강생이 몰려서 수강신청을 하지 못했습니다.\n" +
+              "<br>\n" +
+              "<br>\n" +
+              "혹시 자리가 남는다면 초안지를 신청해도 될까요??\n" +
+              "<br>\n" +
+              "<br>\n" +
+              "끝까지 읽어주셔서 감사합니다!!\n";
             var email = {
               to: to,
               subject: subject,
-              body: '버그 제보 혹은 기능 제안을 해주세요.<br><br><br>' + infoStr,
+              body: body + "<br><br>",
               isHtml: true
             };
 
@@ -286,14 +331,14 @@ angular.module('starter.controllers', [])
               if(oldTs + 60 * 10 < curTs){ // 10분간 로그인 시도 안함
                 AuthService.tmpTimeSave(curTs);
                 oldTs = curTs;
-                var code = `$.ajax({
-                          type: "POST",
-                          url: "https://sugang.snu.ac.kr/sugang/j_login",
-                          data: "j_username=` + form.id + "&j_password=" + form.password + `",
-                          success: function() { alert("학번 및 비밀번호를 확인해주세요") },
-                          error: function(e) { window.location = 'https://sugang.snu.ac.kr/sugang/cc/cc210.action' },
-                          contentType : "application/x-www-form-urlencoded"
-                        });`
+                var code = '$.ajax({\n' +
+                          'type: "POST",\n' +
+                          'url: "https://sugang.snu.ac.kr/sugang/j_login",\n' +
+                          'data: "j_username=' + form.id + "&j_password=" + form.password + '",\n' +
+                          'success: function() { alert("학번 및 비밀번호를 확인해주세요") },\n' +
+                          'error: function(e) { window.location = "https://sugang.snu.ac.kr/sugang/cc/cc210.action" },\n' +
+                          'contentType : "application/x-www-form-urlencoded"\n' +
+                        '});';
                 $cordovaInAppBrowser.executeScript({
                   code: code
                 });
@@ -402,10 +447,16 @@ angular.module('starter.controllers', [])
   $scope.posts = [];
   $scope.header = "";
 
+  $scope.doRefresh = function() {
+    $scope.lastId = 0;
+    $scope.loadMore();
+  }
+
   $scope.loadMore = function() {
     PostsService.getLatest($scope.lastId).then(function(res) {
+      if($scope.lastId == 0) $scope.posts = [];
       $scope.canBeLoaded = res.data.load_more;
-      $scope.posts = res.data.posts;
+      $scope.posts = $scope.posts.concat(res.data.posts);
       if($scope.posts.length > 0) {
         $scope.lastId = $scope.posts[$scope.posts.length - 1].id;
       }
@@ -414,14 +465,16 @@ angular.module('starter.controllers', [])
       } else {
         $scope.header = "";
       }
+      $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }, function(err) {
+      $scope.$broadcast('scroll.refreshComplete');
+      $scope.$broadcast('scroll.infiniteScrollComplete');
       var alertPopup = $ionicPopup.alert({
         title: '에러',
         template: '정보를 가져오는데 문제가 생겼습니다.',
         okText: "확인"
       });
-      $scope.$broadcast('scroll.infiniteScrollComplete');
     })
   }
 })
@@ -448,7 +501,7 @@ angular.module('starter.controllers', [])
         infoStr += '<br>model: ' + info.model;
         infoStr += '<br>version: ' + info.version;
         infoStr += '<br>appVersion: ' + appVersion; 
-        infoStr += '<br>ID: ' + token; 
+        infoStr += '<br>ID: ' + token.substring(0, 8); 
 
         var email = {
           to: 'help.shython@gmail.com',
@@ -479,6 +532,12 @@ angular.module('starter.controllers', [])
 
   UsersService.getOptions().then(function(res) {
     $scope.options = res.data;
+    $scope.latestVersion = "1.0.0";
+    if(ionic.Platform.isIOS()) {
+      $scope.latestVersion = $scope.options.version.ios;
+    } else if(ionic.Platform.isAndroid()) {
+      $scope.latestVersion = $scope.options.version.android;
+    }
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -520,6 +579,7 @@ angular.module('starter.controllers', [])
     $scope.form = {id: '', password: ''};
     $scope.isSet = $scope.form.id.length > 0 && $scope.form.password.length > 0;
     AuthService.tmpInit();
+    AuthService.tmpTimeInit();
     var alertPopup = $ionicPopup.alert({
       title: '안내',
       template: '자동 로그인 정보가 초기화되었습니다.',
@@ -539,7 +599,7 @@ angular.module('starter.controllers', [])
 
   $scope.save = function() {
     $scope.isSet = $scope.form.id.length > 0 && $scope.form.password.length > 0;
-    AuthService.tmpInit();
+    AuthService.tmpTimeInit();
     AuthService.tmpSave($scope.form.id, $scope.form.password);
     var alertPopup = $ionicPopup.alert({
       title: '안내',
@@ -555,21 +615,28 @@ angular.module('starter.controllers', [])
   $scope.notis = [];
   $scope.header = "";
 
-  UsersService.getNoti().then(function(res) {
-    $scope.notis = res.data.notis;
-    if($scope.notis.length == 0) {
-      $scope.header = '즐겨찾기한 강좌의 변동사항이 없습니다.';
-    } else {
-      $scope.header = "";
-    }
-    console.log($scope.notis);
-    console.log($scope.header);
-  }, function(err) {
-    var alertPopup = $ionicPopup.alert({
-      title: '에러',
-      template: '정보를 가져오는데 문제가 생겼습니다.',
-      okText: "확인"
-    });
-  })
+  $scope.doRefresh = function() {
+    $scope.init();
+  }
+
+  $scope.init = function() {
+    UsersService.getNoti().then(function(res) {
+      $scope.notis = res.data.notis;
+      if($scope.notis.length == 0) {
+        $scope.header = '즐겨찾기한 강좌의 변동사항이 없습니다.';
+      } else {
+        $scope.header = "";
+      }
+      $scope.$broadcast('scroll.refreshComplete');
+    }, function(err) {
+      $scope.$broadcast('scroll.refreshComplete');
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
+  $scope.init();
 })
 ;

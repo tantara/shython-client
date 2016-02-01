@@ -37,6 +37,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   }
 
+  $rootScope.openExternal = function(url) {
+    if(ionic.Platform.isWebView()) {
+      window.open(url, '_system');
+    } else {
+      window.open(url, '_blank');
+    }
+  }
+
   $rootScope.openWebview = function(url) {
     if(ionic.Platform.isWebView()) {
       var options = {

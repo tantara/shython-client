@@ -1,5 +1,9 @@
 <ion-view view-title="알림판">
   <ion-content>
+    <ion-refresher
+        pulling-text="로딩중..."
+        on-refresh="doRefresh()">
+    </ion-refresher>
     <div class="list">
       <div class="item item-divider" ng-show="header.length > 0">
         {{header}}

@@ -4,7 +4,7 @@
       <div class="item item-divider">
         계정
       </div>
-      <a class="item item-icon-right" href="#/tab/more/noti">
+      <a class="item item-icon-right" href="#/tab/more/noti" ng-show="false">
         즐찾한 강좌의 변동사항
         <i class="icon ion-chevron-right icon-accessory"></i>
       </a>
@@ -32,19 +32,19 @@
         <span class="item-note">
           현재 버전 {{appVersion}}
           <br>
-          최신 버전 {{options.latestVersion}}
+          최신 버전 {{latestVersion}}
         </span>
       </li>
       <div class="item item-divider">
         CONTACT
       </div>
-      <a class="item" href="https://open.kakao.com/o/gaCfEXg" target="_system">
+      <a class="item" ng-click="openExternal('https://open.kakao.com/o/gaCfEXg')">
         카카오톡
         <span class="item-note">
           샤이썬(오픈채팅)
         </span>
       </a>
-      <a class="item" href="https://facebook.com/snu.shython" target="_system">
+      <a class="item" ng-click="openExternal('https://facebook.com/snu.shython')">
         페이스북 페이지
         <span class="item-note">
           @snu.shython
@@ -53,7 +53,7 @@
       <div class="item item-divider">
         안내
       </div>
-      <a class="item item-icon-right" href="http://sugang.snu.ac" target="_system">
+      <a class="item item-icon-right" ng-click="openExternal('http://sugang.snu.ac')">
         웹 버전 사용하기
         <i class="icon ion-chevron-right icon-accessory"></i>
       </a>

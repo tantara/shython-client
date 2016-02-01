@@ -1,6 +1,10 @@
 <ion-view cache-view="false">
   <ion-nav-title>즐겨찾기 TOP {{lectures.length}}</ion-nav-title>
   <ion-content>
+    <ion-refresher
+        pulling-text="로딩중..."
+        on-refresh="doRefresh()">
+    </ion-refresher>
     <div class="list">
       <div class="item item-divider" ng-show="header.length > 0">
         {{header}}

@@ -4,6 +4,11 @@
     <a ng-show="mode!='search'" class="button icon ion-android-notifications-none" href="#/tab/home/noti"></a>
   </ion-nav-buttons>
   <ion-content>
+    <ion-refresher
+        pulling-text="로딩중..."
+        on-refresh="doRefresh()">
+    </ion-refresher>
+    <img ng-if="banner.image" ng-src="{{banner.image}}" class="full-image" ng-click="openExternal('{{banner.url}}')" />
     <div class="bar bar-header item-input-inset">
       <label class="item-input-wrapper">
         <i class="icon ion-ios-search placeholder-icon"></i>
