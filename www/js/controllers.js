@@ -3,22 +3,16 @@ angular.module('starter.controllers', [])
 .controller('TabCtrl', function($scope, $state) {
 })
 
-.controller('IntroCtrl', function($scope, $state, AuthService, $ionicPopup, $stateParams, $window, AuthService, UsersService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Intro Controller"); }
-
-  function makeKey()
-  {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for( var i = 0; i < 10; i++ )
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-  }
+.controller('IntroCtrl', function($scope, $state, AuthService, $ionicPopup, $stateParams, $window, AuthService, UsersService, $rootScope) {
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Intro Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.start  = function() {
-    var user = {key: makeKey()};
+    var key = $rootScope.makeKey();
+    var user = {key: key};
     AuthService.start(user).then(function(res) {
       var uuid = AuthService.loadPushToken();
       var device = AuthService.loadDeviceInfo();
@@ -36,8 +30,12 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('HomeCtrl', function($scope, $ionicPopup, LecturesService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Home Controller"); }
+.controller('HomeCtrl', function($scope, $ionicPopup, LecturesService, UsersService, AuthService, $ionicPopup, ProfileService, StatService, $rootScope) {
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Home Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.searchForm = {};
   $scope.season = "";
@@ -51,6 +49,63 @@ angular.module('starter.controllers', [])
   $scope.banner = {};
   //$scope.banner.image = "https://ssl.pstatic.net/sstatic/keypage/outside/scui/chuseok_2015/img/bg_banner.png";
   //$scope.banner.url = "http://naver.com"
+  
+  $scope.showProfileForm = function() {
+    $scope.profileForm = {year: 2016, state: 'graduate'};
+    var myPopup = $ionicPopup.show({
+      template: '<div class="list"><div class="item item-input"><div class="input-label">입학년도</div><input type="number" ng-model="profileForm.year" style="text-align: right;"></div><div class="item item-input item-select"><div class="input-label">학적</div><select ng-model="profileForm.state"><option value="graduate">학부생</option><option value="master">석사</option><option value="doctor">박사</option></select></div></div>',
+      title: "입학년도와 학적을 입력해주세요.",
+      subTitle: "알림을 효율적으로 보내는 데 사용됩니다. 자세한 내용은 '더보기 > 프로필 수정'을 확인하세요.",
+      scope: $scope,
+      buttons: [
+        { text: '나중에 하기' },
+        {
+          text: '<b>등록</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.profileForm.year) {
+              //don't allow the user to close unless he enters wifi password
+              e.preventDefault();
+            } else {
+              return $scope.profileForm.year;
+            }
+          }
+        }
+      ]
+    });
+
+    myPopup.then(function(res) {
+      console.log('Tapped!', res);
+      if(res != undefined) {
+        ProfileService.edit($scope.profileForm).then(function(res) {
+          var alertPopup = $ionicPopup.alert({
+            title: '안내',
+            template: '등록되었습니다',
+            okText: "확인"
+          });
+        }, function(err) {
+          var alertPopup = $ionicPopup.alert({
+            title: '에러',
+            template: '정보를 가져오는데 문제가 생겼습니다.',
+            okText: "확인"
+          });
+        })
+      }
+    });
+  }
+
+  $scope.configure = function() {
+    UsersService.configure().then(function(res) {
+      console.log(res.data);
+      AuthService.storeUID(res.data.key);
+
+      if(res.data.show_profile_form) {
+        $scope.showProfileForm();
+      }
+    }, function(err) {
+    });
+  }
+  $scope.configure();
 
   $scope.doRefresh = function() {
     if($scope.lastQuery.length == 0) {
@@ -108,6 +163,15 @@ angular.module('starter.controllers', [])
     })
   };
 
+  $scope.openAd = function(banner) {
+    StatService.clickAd(banner).then(function(res) {
+      console.log(res);
+    }, function(err) {
+      console.log(err);
+    });
+    $rootScope.openExternal(banner.url);
+  }
+
   $scope.showAbbModal = function() {
     $scope.data = {query: $scope.lastQuery};
     var myPopup = $ionicPopup.show({
@@ -155,7 +219,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('BookmarkCtrl', function($scope, $ionicPopup, UsersService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Bookmark Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Bookmark Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.lectures = [];
   $scope.header = "";
@@ -190,7 +258,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('HotLecturesCtrl', function($scope, $ionicPopup, LecturesService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Hot Lectures Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Hot Lectures Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.lectures = [];
   $scope.header = "";
@@ -217,7 +289,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope, AuthService, $cordovaInAppBrowser, $cordovaEmailComposer) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Lecture Detail Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Lecture Detail Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.tab = 1;
   $scope.lecture = {};
@@ -389,7 +465,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('CreatePostCtrl', function($scope, $ionicPopup, PostsService, $ionicHistory) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Create Post Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Create Post Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.form = {};
 
@@ -412,7 +492,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PostDetailCtrl', function($scope, $ionicPopup, PostsService, $stateParams, $window) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Post Detail Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Post Detail Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
   
   $scope.post = {};
 
@@ -440,7 +524,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MarketCtrl', function($scope, $ionicPopup, PostsService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Market Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Market Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.canBeLoaded = true;
   $scope.lastId = 0;
@@ -480,7 +568,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MoreCtrl', function($scope, UsersService, $ionicPopup, SERVER, $rootScope, $cordovaEmailComposer, AuthService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("More Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "More Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.options = {};
   console.log(appVersion);
@@ -566,8 +658,49 @@ angular.module('starter.controllers', [])
   }
 })
 
+.controller('ProfileCtrl', function($scope, $ionicPopup, ProfileService) {
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Profile Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
+
+  $scope.profileForm = {};
+  ProfileService.get().then(function(res) {
+    $scope.profileForm = res.data.profile;
+  }, function(err) {
+    var alertPopup = $ionicPopup.alert({
+      title: '에러',
+      template: '정보를 가져오는데 문제가 생겼습니다.',
+      okText: "확인"
+    });
+  });
+
+
+  $scope.save = function() {
+    ProfileService.edit($scope.profileForm).then(function(res) {
+      $scope.profileForm = res.data.profile;
+      var alertPopup = $ionicPopup.alert({
+        title: '안내',
+        template: '등록되었습니다',
+        okText: "확인"
+      });
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
+})
+
 .controller('AutoCtrl', function($scope, $ionicPopup, AuthService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Auto Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Auto Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.form = AuthService.tmpLoad();
   $scope.oldTs = AuthService.tmpTimeLoad();
@@ -609,8 +742,51 @@ angular.module('starter.controllers', [])
   }
 })
 
+.controller('TipsCtrl', function($scope, $ionicPopup, TipsService) {
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Tips Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
+
+  $scope.tips = [];
+
+  $scope.init = function() {
+    TipsService.getAll().then(function(res) {
+      $scope.tips = res.data.tips;
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    });
+  }
+  $scope.init();
+
+  $scope.save = function(form) {
+    TipsService.save(form).then(function(res) {
+      var alertPopup = $ionicPopup.alert({
+        title: '안내',
+        template: '등록되었습니다.',
+        okText: "확인"
+      });
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    });
+  }
+})
+
 .controller('NotiCtrl', function($scope, $ionicPopup, UsersService) {
-  if(typeof analytics !== "undefined") { analytics.trackView("Noti Controller"); }
+  $scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Noti Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })
 
   $scope.notis = [];
   $scope.header = "";

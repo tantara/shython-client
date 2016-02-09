@@ -8,12 +8,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  //host: 'http://192.168.0.7:3000',
-  host: 'http://api-sugang.snu.ac',
+  host: 'http://192.168.0.9:3000',
+  //host: 'http://api-sugang.snu.ac',
   web: 'http://sugang.snu.ac',
 })
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory, $cordovaKeychain) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);
@@ -64,6 +64,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   }
 
+  $rootScope.makeKey = function() {
+    var key = AuthService.loadUID();
+    if(key != null && typeof key !== "undefined" && key.length > 0) {
+      return key;
+    }
+
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i = 0; i < 10; i++ )
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+
   $rootScope.openReview = function() {
     var customLocale = {};
     customLocale.title = "샤이썬의 리뷰를 작성해주세요";
@@ -81,23 +96,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     AppRate.preferences.promptAgainForEachNewVersion = true;
     AppRate.promptForRating();
   }
-
-  $ionicPlatform.ready(function() {
-    if(typeof analytics !== "undefined") {
-      if(ionic.Platform.isIOS()) {
-        analytics.startTrackerWithId("UA-71864537-2");
-      } else if(ionic.Platform.isAndroid()) {
-        analytics.startTrackerWithId("UA-71864537-3");
-        analytics.trackView('whatever');
-      }
-    } else {
-      console.log("Google Analytics Unavailable");
-    }
-
-    if(ionic.Platform.isWebView()) {
-      $rootScope.openReview();
-    }
-  });
 
   $ionicPlatform.registerBackButtonAction(function(e){
     if ($rootScope.backButtonPressedOnceToExit) {
@@ -140,6 +138,40 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     }
 
+    if (window.Keychain) {
+      var key = "oldKey";
+      var servicename = "shython";
+
+      $cordovaKeychain.getForKey(key, servicename).then(function(value) {
+        console.log("old key: " + value);
+        $scope.key = value;
+      }, function (err) {
+        var value = $rootScope.makeKey();
+        console.log("generated: " + value);
+        $cordovaKeychain.setForKey(key, servicename, value).then(function(res) {
+          console.log("new key: " + value);
+          AuthService.storeUID(value);
+        }, function(err) {
+          console.log('later');
+        });
+      });
+    }
+
+    if(typeof analytics !== "undefined") {
+      if(ionic.Platform.isIOS()) {
+        analytics.startTrackerWithId("UA-71864537-2");
+      } else if(ionic.Platform.isAndroid()) {
+        analytics.startTrackerWithId("UA-71864537-3");
+        analytics.trackView('whatever');
+      }
+    } else {
+      console.log("Google Analytics Unavailable");
+    }
+
+    if(ionic.Platform.isWebView()) {
+      $rootScope.openReview();
+    }
+
     if(ionic.Platform.isWebView()) {
       cordova.getAppVersion(function(version) {
         appVersion = version;
@@ -163,8 +195,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       var push = PushNotification.init({
         android: {
           senderID: "607566472910",
-          "icon": "icon",
-          "iconColor": "#FFFFFF"
+          "icon": "ic_stat_icon_material",
+          "iconColor": "grey"
         },
         ios: {
           alert: "true",
@@ -241,4 +273,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   //$ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.views.swipeBackEnabled(false);
   $ionicConfigProvider.backButton.text('');
+  $ionicConfigProvider.backButton.previousTitleText(false);
 })

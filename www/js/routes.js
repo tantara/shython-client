@@ -152,12 +152,32 @@ angular.module('starter.routes', [])
     }
   })
 
+  .state('tab.more-profile', {
+    url: '/more/profile',
+    views: {
+      'tab-more': {
+        templateUrl: 'templates/more-profile.html',
+        controller: 'ProfileCtrl'
+      }
+    }
+  })
+
   .state('tab.more-auto', {
     url: '/more/auto',
     views: {
       'tab-more': {
         templateUrl: 'templates/more-auto.html',
         controller: 'AutoCtrl'
+      }
+    }
+  })
+
+  .state('tab.more-tips', {
+    url: '/more/tips',
+    views: {
+      'tab-more': {
+        templateUrl: 'templates/more-tips.html',
+        controller: 'TipsCtrl'
       }
     }
   })

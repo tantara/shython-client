@@ -1,5 +1,98 @@
 angular.module('starter.services', [])
 
+.service('StatService', function($q, $http, SERVER) {
+  var clickAd = function(banner) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'POST',
+        url: SERVER.host + '/api/v1/stats/click_ad',
+        data: banner
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  return {
+    clickAd: clickAd
+  }
+})
+
+.service('TipsService', function($q, $http, SERVER) {
+  var getAll = function(tip) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/tips'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  var save = function(tip) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'POST',
+        url: SERVER.host + '/api/v1/tips',
+        data: tip
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  return {
+    getAll: getAll,
+    save: save
+  }
+})
+
+.service('ProfileService', function($q, $http, SERVER) {
+  var get = function(postId) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/profiles/me'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  var edit = function(data) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'PUT',
+        url: SERVER.host + '/api/v1/profiles/me',
+        data: data
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('failed.');
+      });
+    });
+  };
+
+  return {
+    get: get,
+    edit: edit
+  }
+})
+
 .service('PostsService', function($q, $http, SERVER) {
   var get = function(postId) {
     return $q(function(resolve, reject) {
@@ -148,6 +241,20 @@ angular.module('starter.services', [])
 })
 
 .service('UsersService', function($q, $http, SERVER) {
+  var configure = function() {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/users/me/configure'
+      }).then(function successCallback(response) {
+        console.log(response);
+        resolve(response);
+      }, function errorCallback(response) {
+        reject('Signup Failed.');
+      });
+    });
+  };
+
   var me = function() {
     return $q(function(resolve, reject) {
       $http({
@@ -235,6 +342,7 @@ angular.module('starter.services', [])
   };
 
   return {
+    configure: configure,
     getBookmark: getBookmark,
     getNoti: getNoti,
     getOptions: getOptions,
@@ -251,6 +359,7 @@ angular.module('starter.services', [])
   var LOCAL_TMP_ID = 'tmpId';
   var LOCAL_TMP_PASSWORD = 'tmpPassword';
   var LOCAL_TMP_TIME = 'tmpTime';
+  var LOCAL_UID_KEY = 'yourUIDKey';
   var isAuthenticated = false;
   var role = '';
   var authToken;
@@ -279,6 +388,14 @@ angular.module('starter.services', [])
 
   function loadDeviceInfo() {
     return window.localStorage.getItem(LOCAL_DEVICE_INFO_KEY);
+  }
+
+  function storeUID(uid) {
+    window.localStorage.setItem(LOCAL_UID_KEY, uid);
+  }
+
+  function loadUID() {
+    return window.localStorage.getItem(LOCAL_UID_KEY);
   }
 
   function storePushToken(token) {
@@ -379,6 +496,8 @@ angular.module('starter.services', [])
     tmpSave: tmpSave,
     tmpLoad: tmpLoad,
     tmpInit: tmpInit,
+    storeUID: storeUID,
+    loadUID: loadUID,
     start: start,
     getUserCredentials: getUserCredentials,
     storeDeviceInfo: storeDeviceInfo,

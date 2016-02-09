@@ -24,10 +24,14 @@
     "cordova-plugin-app-version",
     "cordova-plugin-inappbrowser",
     "phonegap-plugin-push",
-    "de.appplant.cordova.plugin.email-composer"
+    "com.connect.cordova.plugin.email-composer",
+    {
+      "locator": "https://github.com/shazron/KeychainPlugin.git",
+      "id": "com.shazron.cordova.plugin.keychainutil"
+    }
   ],
   "cordovaPlatforms": [
-    "android",
-    "ios"
+    "ios",
+    "android"
   ]
 }

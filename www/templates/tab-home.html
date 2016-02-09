@@ -9,7 +9,7 @@
         on-refresh="doRefresh()">
     </ion-refresher>
 
-    <img ng-if="banner.image" ng-src="{{banner.image}}" class="full-image" ng-click="openExternal('{{banner.url}}')" />
+    <img ng-if="banner.image" ng-src="{{banner.image}}" class="full-image" ng-click="openAd({{banner}})" />
     <div class="bar bar-header item-input-inset">
       <label class="item-input-wrapper">
         <i class="icon ion-ios-search placeholder-icon"></i>
