@@ -7,10 +7,15 @@
 
       <li class="item item-icon-right" ng-repeat="tip in tips" ng-click="openExternal('{{tip.url}}')">
         <h2>{{$index + 1}}. {{tip.name}}</h2>
-        <p>{{tip.description}}</p>
+        <p>{{tip.description}}. {{tip.by}}에 의해 등록</p>
         <i class="icon ion-chevron-right icon-accessory">
         </i>
       </li>
+    </div>
+    <div class="card" ng-if="notice.length > 0">
+      <div class="item item-text-wrap">
+        {{notice}}
+      </div>
     </div>
   </ion-content>
 </ion-view>

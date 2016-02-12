@@ -144,8 +144,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
       $cordovaKeychain.getForKey(key, servicename).then(function(value) {
         console.log("old key: " + value);
-        $scope.key = value;
-      }, function (err) {
+        AuthService.storeUID(value);
+      }, function(err) {
         var value = $rootScope.makeKey();
         console.log("generated: " + value);
         $cordovaKeychain.setForKey(key, servicename, value).then(function(res) {
@@ -155,6 +155,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           console.log('later');
         });
       });
+    }
+    if (ionic.Platform.isAndroid()) {
+      var device = $cordovaDevice.getDevice();
+      var uuid = $cordovaDevice.getUUID();
+      AuthService.storeUID(uuid);
     }
 
     if(typeof analytics !== "undefined") {

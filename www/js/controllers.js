@@ -30,7 +30,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('HomeCtrl', function($scope, $ionicPopup, LecturesService, UsersService, AuthService, $ionicPopup, ProfileService, StatService, $rootScope) {
+.controller('HomeCtrl', function($scope, $ionicPopup, LecturesService, UsersService, AuthService, $ionicPopup, ProfileService, StatService, $rootScope, $cordovaKeychain) {
   $scope.$on('$ionicView.enter', function() {
     var ctrlName = "Home Controller";
     console.log(ctrlName);
@@ -47,13 +47,16 @@ angular.module('starter.controllers', [])
   $scope.mode = "hot";
   $scope.lastQuery = "";
   $scope.banner = {};
+  $scope.unread = 0;
   //$scope.banner.image = "https://ssl.pstatic.net/sstatic/keypage/outside/scui/chuseok_2015/img/bg_banner.png";
   //$scope.banner.url = "http://naver.com"
   
   $scope.showProfileForm = function() {
-    $scope.profileForm = {year: 2016, state: 'graduate'};
+    $scope.profileForm = {};
+    $scope.years = _.range(1990, 2017);
+
     var myPopup = $ionicPopup.show({
-      template: '<div class="list"><div class="item item-input"><div class="input-label">입학년도</div><input type="number" ng-model="profileForm.year" style="text-align: right;"></div><div class="item item-input item-select"><div class="input-label">학적</div><select ng-model="profileForm.state"><option value="graduate">학부생</option><option value="master">석사</option><option value="doctor">박사</option></select></div></div>',
+      template: '<div class="list"><div class="item item-input item-select"><div class="input-label">입학년도</div><select ng-model="profileForm.year"><option ng-value="">선택해주세요</option><option ng-repeat="year in years" ng-value="{{year}}">{{year}}년</option></select></div><div class="item item-input item-select"><div class="input-label">학적</div><select ng-model="profileForm.state"><option ng-value="">선택해주세요</option><option value="graduate">학부생</option><option value="master">석사</option><option value="doctor">박사</option></select></div></div>',
       title: "입학년도와 학적을 입력해주세요.",
       subTitle: "알림을 효율적으로 보내는 데 사용됩니다. 자세한 내용은 '더보기 > 프로필 수정'을 확인하세요.",
       scope: $scope,
@@ -97,7 +100,18 @@ angular.module('starter.controllers', [])
   $scope.configure = function() {
     UsersService.configure().then(function(res) {
       console.log(res.data);
-      AuthService.storeUID(res.data.key);
+      if(ionic.Platform.isIOS()) {
+        var key = "oldKey";
+        var servicename = "shython";
+
+        var value = res.data.key;
+        $cordovaKeychain.setForKey(key, servicename, value).then(function(res) {
+          console.log("new key: " + value);
+          AuthService.storeUID(value);
+        }, function(err) {
+          console.log('later');
+        });
+      }
 
       if(res.data.show_profile_form) {
         $scope.showProfileForm();
@@ -127,6 +141,7 @@ angular.module('starter.controllers', [])
       $scope.season = res.data.season;
       $scope.notice = res.data.notice;
       $scope.banner = res.data.banner;
+      $scope.unread = res.data.unread;
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
@@ -297,6 +312,7 @@ angular.module('starter.controllers', [])
 
   $scope.tab = 1;
   $scope.lecture = {};
+  $scope.similar_lectures = [];
   $scope.remark = false;
 
   $scope.tabChanged = function(tab) {
@@ -450,6 +466,7 @@ angular.module('starter.controllers', [])
 
   LecturesService.get($stateParams.lectureId).then(function(res) {
     $scope.lecture = res.data.lecture;
+    $scope.similar_lectures = res.data.similar_lectures;
     $scope.lecture.isBookmarked = res.data.isBookmarked;
     $scope.lecture.bookmarkCount = res.data.bookmark_count;
     $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
@@ -666,6 +683,8 @@ angular.module('starter.controllers', [])
   })
 
   $scope.profileForm = {};
+  $scope.years = _.range(1990, 2017);
+
   ProfileService.get().then(function(res) {
     $scope.profileForm = res.data.profile;
   }, function(err) {
@@ -750,10 +769,14 @@ angular.module('starter.controllers', [])
   })
 
   $scope.tips = [];
+  $scope.header = "";
+  $scope.notice = "";
 
   $scope.init = function() {
     TipsService.getAll().then(function(res) {
       $scope.tips = res.data.tips;
+      $scope.header = res.data.header;
+      $scope.notice = res.data.notice;
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
         title: '에러',
