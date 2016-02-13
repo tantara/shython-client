@@ -8,8 +8,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  host: 'http://192.168.0.9:3000',
-  //host: 'http://api-sugang.snu.ac',
+  //host: 'http://192.168.0.9:3000',
+  host: 'http://api-sugang.snu.ac',
   web: 'http://sugang.snu.ac',
 })
 
@@ -219,9 +219,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
       push.on('notification', function(data) {
         var info = data;
-        if(ionic.Platform.isIOS()) {
+        //if(ionic.Platform.isIOS()) {
           info = data.additionalData;
-        }
+        //}
         if(info.action == "review") {
           $rootScope.openReview();
           AppRate.promptForRating(true);
