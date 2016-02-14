@@ -3,7 +3,7 @@
     <a ng-show="mode=='search'" class="button" ng-click="init()">
       <i class="icon ion-close"></i>
     </a>
-    <a ng-show="mode!='search'" class="button" href="#/tab/home/noti">
+    <a ng-show="mode!='search'" class="button" ng-click="goToNoti()">
       <i class="icon ion-android-notifications-none" ng-if="unread <= 0"></i>
       <i class="icon ion-android-notifications stable" ng-if="unread > 0"></i>
     </a>

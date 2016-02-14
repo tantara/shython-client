@@ -4,9 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <meta name="theme-color" content="#11c1f3">
-    <title></title>
+    <title>샤이썬: 서울대학교 수강신청 빈자리 알리미</title>
+    <meta name="author" content="샤이썬" />
+    <meta property="fb:app_id" content="246306482367742" />
+    <meta property="og:title" content="샤이썬: 서울대학교 수강신청 빈자리 알리미" />
+    <meta property="og:site_name" content="듣고싶은 강의에 빈자리가 생기면 푸시로 알려드려요!! 안드로이드, 아이폰 모두 지원!!" />
+    <meta property="og:image" content="https://sugang.snu.ac/assets/logo_large.jpg" />
+    <meta property="og:url" content="https://shyhon.kr/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="이번 학기에 꼭 들어야하는 강의. 매번 컴퓨터 앞에서 새로고침하면서 확인하지말고 이젠 샤이썬에게 맡기자! 더 이상의 시간 낭비는 하지말자!"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="apple-itunes-app" content="app-id=1071743994">
+    <link rel="shortcut icon" href="https://sugang.snu.ac/assets/favicon.ico">
 
-    <!--
+    <!-- web only -->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -15,7 +27,7 @@
       ga('create', 'UA-71864537-1', 'auto');
       ga('send', 'pageview', {'page': location.pathname + location.search  + location.hash});
     </script>
-    -->
+    <!-- web only end -->
 
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -41,6 +53,11 @@
     <script src="lib/angular-moment/angular-moment.js"></script>
     <script src="lib/moment/locale/ko.js"></script>
     <script src="lib/underscore/underscore.js"></script>
+
+    <!-- web only -->
+    <link rel="manifest" href="manifest.json">
+    <script src="js/notifications.js"></script>
+    <!-- web only end -->
   </head>
   <body ng-app="starter">
     <!--

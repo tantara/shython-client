@@ -30,7 +30,7 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('HomeCtrl', function($scope, $ionicPopup, LecturesService, UsersService, AuthService, $ionicPopup, ProfileService, StatService, $rootScope, $cordovaKeychain) {
+.controller('HomeCtrl', function($scope, $ionicPopup, LecturesService, UsersService, AuthService, $ionicPopup, ProfileService, StatService, $rootScope, $cordovaKeychain, $state) {
   $scope.$on('$ionicView.enter', function() {
     var ctrlName = "Home Controller";
     console.log(ctrlName);
@@ -50,6 +50,28 @@ angular.module('starter.controllers', [])
   $scope.unread = 0;
   //$scope.banner.image = "https://ssl.pstatic.net/sstatic/keypage/outside/scui/chuseok_2015/img/bg_banner.png";
   //$scope.banner.url = "http://naver.com"
+
+  $scope.webPushEnabled = false;
+  $scope.activateWebPush = function() {
+    if(!ionic.Platform.isWebView()) {
+      if($scope.webPushEnabled == false) {
+        var alertPopup = $ionicPopup.alert({
+          title: '안내',
+          template: '데스크탑 혹은 모바일 브라우저에서도 알림을 받으실 수 있습니다. 단, 크롬만 지원합니다.',
+          okText: "확인"
+        });
+        alertPopup.then(function(res) {
+          $scope.webPushEnabled = true;
+          activate();
+        });
+      }
+    }
+  }
+
+  $scope.goToNoti = function() {
+    $state.go('tab.home-noti');
+    $scope.unread = 0;
+  }
   
   $scope.showProfileForm = function() {
     $scope.profileForm = {};
@@ -100,6 +122,7 @@ angular.module('starter.controllers', [])
   $scope.configure = function() {
     UsersService.configure().then(function(res) {
       console.log(res.data);
+      $scope.activateWebPush();
       if(ionic.Platform.isIOS()) {
         var key = "oldKey";
         var servicename = "shython";
@@ -641,7 +664,7 @@ angular.module('starter.controllers', [])
 
   UsersService.getOptions().then(function(res) {
     $scope.options = res.data;
-    $scope.latestVersion = "1.0.0";
+    $scope.latestVersion = appVersion;
     if(ionic.Platform.isIOS()) {
       $scope.latestVersion = $scope.options.version.ios;
     } else if(ionic.Platform.isAndroid()) {
@@ -656,22 +679,30 @@ angular.module('starter.controllers', [])
   });
 
   $scope.change = function() {
-    var uuid = AuthService.loadPushToken();
-    var device = AuthService.loadDeviceInfo();
-    UsersService.editOptions($scope.options, uuid, device).then(function(res) {
+    if(!ionic.Platform.isWebView()) {
       var alertPopup = $ionicPopup.alert({
         title: '안내',
-        template: res.data.msg,
+        template: "웹 버전 알림은 크롬 브라우저에서만 동작합니다. 크롬 브라우저들 사용하시는 경우에는 '검색 탭' 이동 후 새로고침을 해주세요.",
         okText: "확인"
       });
-      $scope.options = res.data.options;
-    }, function(err) {
-      var alertPopup = $ionicPopup.alert({
-        title: '에러',
-        template: '정보를 가져오는데 문제가 생겼습니다.',
-        okText: "확인"
+    } else {
+      var uuid = AuthService.loadPushToken();
+      var device = AuthService.loadDeviceInfo();
+      UsersService.editOptions($scope.options, uuid, device).then(function(res) {
+        var alertPopup = $ionicPopup.alert({
+          title: '안내',
+          template: res.data.msg,
+          okText: "확인"
+        });
+        $scope.options = res.data.options;
+      }, function(err) {
+        var alertPopup = $ionicPopup.alert({
+          title: '에러',
+          template: '정보를 가져오는데 문제가 생겼습니다.',
+          okText: "확인"
+        });
       });
-    });
+    }
   }
 })
 
