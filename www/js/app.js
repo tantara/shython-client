@@ -1,4 +1,4 @@
-var appVersion = "1.0.4";
+var appVersion = "1.0.5";
 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment'])
 
@@ -8,7 +8,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  //host: 'http://192.168.0.9:3000',
+  //host: 'http://127.0.0.1:3000',
   host: 'https://api-sugang.snu.ac',
   web: 'https://sugang.snu.ac',
 })
