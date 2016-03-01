@@ -550,7 +550,7 @@ angular.module('starter.controllers', [])
 
   $scope.contact = function() {
     if($scope.post.link) {
-      $window.open($scope.open.link, '_system', 'location=yes');
+      $window.open($scope.post.link, '_system', 'location=yes');
     } else {
       var alertPopup = $ionicPopup.alert({
         title: '안내',
