@@ -75,7 +75,7 @@ angular.module('starter.controllers', [])
   
   $scope.showProfileForm = function() {
     $scope.profileForm = {};
-    $scope.years = _.range(2016, 1990);
+    $scope.years = _.range(2016, 1990, -1);
 
     var myPopup = $ionicPopup.show({
       template: '<div class="list"><div class="item item-input item-select"><div class="input-label">입학년도</div><select ng-model="profileForm.year"><option ng-value="">선택해주세요</option><option ng-repeat="year in years" ng-value="{{year}}">{{year}}년</option></select></div><div class="item item-input item-select"><div class="input-label">학적</div><select ng-model="profileForm.state"><option ng-value="">선택해주세요</option><option value="graduate">학부생</option><option value="master">석사</option><option value="doctor">박사</option></select></div></div>',
@@ -550,7 +550,7 @@ angular.module('starter.controllers', [])
 
   $scope.contact = function() {
     if($scope.post.link) {
-      $window.open($scope.open.link, '_system', 'location=yes');
+      $window.open($scope.post.link, '_system', 'location=yes');
     } else {
       var alertPopup = $ionicPopup.alert({
         title: '안내',
@@ -722,7 +722,7 @@ angular.module('starter.controllers', [])
   })
 
   $scope.profileForm = {};
-  $scope.years = _.range(2016, 1990);
+  $scope.years = _.range(2016, 1990, -1);
 
   ProfileService.get().then(function(res) {
     $scope.profileForm = res.data.profile;
