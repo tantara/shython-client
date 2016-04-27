@@ -54,7 +54,7 @@ angular.module('starter.controllers', [])
   $scope.webPushEnabled = false;
   $scope.activateWebPush = function() {
     if(!ionic.Platform.isWebView()) {
-      if($scope.webPushEnabled == false) {
+      if($scope.webPushEnabled == true) {
         var alertPopup = $ionicPopup.alert({
           title: '안내',
           template: '데스크탑 혹은 모바일 브라우저에서도 알림을 받으실 수 있습니다. 단, 크롬만 지원합니다.',
@@ -121,26 +121,28 @@ angular.module('starter.controllers', [])
 
   $scope.configure = function() {
     UsersService.configure().then(function(res) {
-      console.log(res.data);
+      console.log(res);
       $scope.activateWebPush();
       if(ionic.Platform.isIOS()) {
         var key = "oldKey";
         var servicename = "shython";
 
-        var value = res.data.key;
-        $cordovaKeychain.setForKey(key, servicename, value).then(function(res) {
-          console.log("new key: " + value);
-          AuthService.storeUID(value);
-        }, function(err) {
-          console.log('later');
-        });
+        if(window.Keychain) {
+          var value = res.key;
+          $cordovaKeychain.setForKey(key, servicename, value).then(function(res) {
+            console.log("new key: " + value);
+            AuthService.storeUID(value);
+          }, function(err) {
+            console.log('later');
+          });
+        }
       }
 
-      if(res.data.show_profile_form) {
+      if(res.show_profile_form) {
         $scope.showProfileForm();
-      } else if(res.data.show_notice_with_url) {
-        var url = res.data.url_notice.data;
-        StatService.checkNotice(res.data.url_notice).then(function(res) {
+      } else if(res.show_notice_with_url) {
+        var url = res.url_notice.data;
+        StatService.checkNotice(res.url_notice).then(function(res) {
           console.log(res);
           $timeout(function() { $rootScope.openWebview(url) }, 4000);
         }, function(err) {
@@ -165,14 +167,14 @@ angular.module('starter.controllers', [])
     $scope.searchForm.query = "";
     LecturesService.hot().then(function(res) {
       $scope.mode = "hot";
-      $scope.lectures = res.data.lectures;
-      $scope.header = res.data.header;
-      $scope.abb = res.data.abb;
-      $scope.abbText = res.data.abb_text;
-      $scope.season = res.data.season;
-      $scope.notice = res.data.notice;
-      $scope.banner = res.data.banner;
-      $scope.unread = res.data.unread;
+      $scope.lectures = res.lectures;
+      $scope.header = res.header;
+      $scope.abb = res.abb;
+      $scope.abbText = res.abb_text;
+      $scope.season = res.season;
+      $scope.notice = res.notice;
+      $scope.banner = res.banner;
+      $scope.unread = res.unread;
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
@@ -191,13 +193,13 @@ angular.module('starter.controllers', [])
     $scope.lastQuery = query;
     LecturesService.search(query).then(function(res) {
       $scope.mode = "search";
-      $scope.lectures = res.data.lectures;
-      $scope.header = res.data.header;
-      $scope.abb = res.data.abb;
-      $scope.abbText = res.data.abb_text;
-      $scope.season = res.data.season;
-      $scope.notice = res.data.notice;
-      $scope.banner = res.data.banner;
+      $scope.lectures = res.lectures;
+      $scope.header = res.header;
+      $scope.abb = res.abb;
+      $scope.abbText = res.abb_text;
+      $scope.season = res.season;
+      $scope.notice = res.notice;
+      $scope.banner = res.banner;
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
@@ -282,14 +284,14 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     UsersService.getBookmark().then(function(res) {
-      $scope.lectures = res.data.lectures;
+      $scope.lectures = res.lectures;
       if($scope.lectures.length == 0) {
         $scope.header = "즐겨찾기한 강좌가 없습니다.";
       } else {
-        $scope.header = "";
+        $scope.header = res.header;
       }
-      $scope.recommend_lectures = res.data.recommend_lectures;
-      $scope.recommend_header = res.data.recommend_header;
+      $scope.recommend_lectures = res.recommend_lectures;
+      $scope.recommend_header = res.recommend_header;
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
@@ -319,8 +321,8 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     LecturesService.hotLiked().then(function(res) {
-      $scope.lectures = res.data.lectures;
-      $scope.header = res.data.header;
+      $scope.lectures = res.lectures;
+      $scope.header = res.header;
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
@@ -485,7 +487,7 @@ angular.module('starter.controllers', [])
 
   $scope.toggle = function(lectureId) {
     LecturesService.toggle(lectureId).then(function(res) {
-      $scope.lecture.isBookmarked = res.data.isBookmarked;
+      $scope.lecture.isBookmarked = res.isBookmarked;
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
         title: '에러',
@@ -496,10 +498,10 @@ angular.module('starter.controllers', [])
   };
 
   LecturesService.get($stateParams.lectureId).then(function(res) {
-    $scope.lecture = res.data.lecture;
-    $scope.similar_lectures = res.data.similar_lectures;
-    $scope.lecture.isBookmarked = res.data.isBookmarked;
-    $scope.lecture.bookmarkCount = res.data.bookmark_count;
+    $scope.lecture = res.lecture;
+    $scope.similar_lectures = res.similar_lectures;
+    $scope.lecture.isBookmarked = res.isBookmarked;
+    $scope.lecture.bookmarkCount = res.bookmark_count;
     $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
     $scope.lecture.location_arr = $scope.lecture.location_str.split("/");
     console.log($scope.lecture);
@@ -561,7 +563,7 @@ angular.module('starter.controllers', [])
   }
 
   PostsService.get($stateParams.postId).then(function(res) {
-    $scope.post = res.data.post;
+    $scope.post = res.post;
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -591,8 +593,8 @@ angular.module('starter.controllers', [])
   $scope.loadMore = function() {
     PostsService.getLatest($scope.lastId).then(function(res) {
       if($scope.lastId == 0) $scope.posts = [];
-      $scope.canBeLoaded = res.data.load_more;
-      $scope.posts = $scope.posts.concat(res.data.posts);
+      $scope.canBeLoaded = res.load_more;
+      $scope.posts = $scope.posts.concat(res.posts);
       if($scope.posts.length > 0) {
         $scope.lastId = $scope.posts[$scope.posts.length - 1].id;
       }
@@ -671,7 +673,7 @@ angular.module('starter.controllers', [])
   }
 
   UsersService.getOptions().then(function(res) {
-    $scope.options = res.data;
+    $scope.options = res;
     $scope.latestVersion = appVersion;
     if(ionic.Platform.isIOS()) {
       $scope.latestVersion = $scope.options.version.ios;
@@ -699,10 +701,10 @@ angular.module('starter.controllers', [])
       UsersService.editOptions($scope.options, uuid, device).then(function(res) {
         var alertPopup = $ionicPopup.alert({
           title: '안내',
-          template: res.data.msg,
+          template: res.msg,
           okText: "확인"
         });
-        $scope.options = res.data.options;
+        $scope.options = res.options;
       }, function(err) {
         var alertPopup = $ionicPopup.alert({
           title: '에러',
@@ -725,7 +727,7 @@ angular.module('starter.controllers', [])
   $scope.years = _.range(2016, 1990, -1);
 
   ProfileService.get().then(function(res) {
-    $scope.profileForm = res.data.profile;
+    $scope.profileForm = res.profile;
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -737,7 +739,7 @@ angular.module('starter.controllers', [])
 
   $scope.save = function() {
     ProfileService.edit($scope.profileForm).then(function(res) {
-      $scope.profileForm = res.data.profile;
+      $scope.profileForm = res.profile;
       var alertPopup = $ionicPopup.alert({
         title: '안내',
         template: '등록되었습니다',
@@ -813,9 +815,9 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     TipsService.getAll().then(function(res) {
-      $scope.tips = res.data.tips;
-      $scope.header = res.data.header;
-      $scope.notice = res.data.notice;
+      $scope.tips = res.tips;
+      $scope.header = res.header;
+      $scope.notice = res.notice;
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
         title: '에러',
@@ -859,7 +861,7 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     UsersService.getNoti().then(function(res) {
-      $scope.notis = res.data.notis;
+      $scope.notis = res.notis;
       if($scope.notis.length == 0) {
         $scope.header = '즐겨찾기한 강좌의 변동사항이 없습니다.';
       } else {

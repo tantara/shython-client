@@ -1,6 +1,6 @@
 {
   "name": "shython-client",
-  "app_id": "",
+  "app_id": "1071743994",
   "gulpStartupTasks": [
     "sass",
     "watch"

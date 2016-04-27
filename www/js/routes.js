@@ -52,16 +52,6 @@ angular.module('starter.routes', [])
     }
   })
 
-  .state('tab.lectures', {
-    url: '/lectures',
-    views: {
-      'tab-lectures': {
-        templateUrl: 'templates/tab-lectures.html',
-        controller: 'LecturesCtrl'
-      }
-    }
-  })
-
   .state('tab.home-noti', {
     url: '/home/noti',
     views: {

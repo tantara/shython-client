@@ -1,9 +1,9 @@
 <ion-view view-title="{{season}}">
   <ion-nav-buttons side="right">
-    <a ng-show="mode=='search'" class="button" ng-click="init()">
+    <a ng-if="mode=='search'" class="button" ng-click="init()">
       <i class="icon ion-close"></i>
     </a>
-    <a ng-show="mode!='search'" class="button" ng-click="goToNoti()">
+    <a ng-if="mode!='search'" class="button" ng-click="goToNoti()">
       <i class="icon ion-android-notifications-none" ng-if="unread <= 0"></i>
       <i class="icon ion-android-notifications stable" ng-if="unread > 0"></i>
     </a>
@@ -25,33 +25,33 @@
       </button>
     </div>
 
-    <div class="padding padding-abb" ng-show="abb.length > 0">
+    <div class="padding padding-abb" ng-if="abb.length > 0">
       <button class="button button-clear button-xsmall button-dark">{{abbText}}</button>
-      <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb" ng-click="search(a)">
-        {{a}}
+      <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb track by $index" ng-click="search(a)">
+        {{::a}}
       </button>
-      <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-show="mode=='search'">축약어 추가하기</button>
+      <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-if="mode=='search'">축약어 추가하기</button>
     </div>
 
-    <div class="padding padding-abb" ng-show="abb.length == 0 && abbText.length > 0">
+    <div class="padding padding-abb" ng-if="abb.length == 0 && abbText.length > 0">
       <button class="button button-clear button-xsmall button-dark">{{abbText}}</button>
-      <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-show="mode=='search'">축약어 추가하기</button>
+      <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-if="mode=='search'">축약어 추가하기</button>
     </div>
 
     <div class="list">
-      <div class="item item-icon-left" ng-show="notice.length > 0">
+      <div class="item item-icon-left" ng-if="notice.length > 0">
         <h2>공지사항</h2>
         <p class="multiline-p">{{notice}}</p>
         <i class="icon ion-ios-information-outline"></i>
       </div>
 
-      <div class="item item-divider" ng-show="header.length > 0">
+      <div class="item item-divider" ng-if="header.length > 0">
         {{header}}
       </div>
 
-      <a class="item item-icon-right" ng-repeat="lecture in lectures" href="#/tab/home/lectures/{{lecture.id}}">
-        <h2>{{$index + 1}}. {{lecture.course.name}}, {{lecture.instructor.name}}</h2>
-        <p>신청현황 <ng-quota cur="{{lecture.current}}" quota="{{lecture.current_quota}}">{{lecture.current}}/{{lecture.quota}}<span ng-show="lecture.quota != lecture.current_quota">(재학생 {{lecture.current_quota}}명)</span></ng-quota>, {{lecture.course.code}}({{lecture.code}})</p>
+      <a class="item item-icon-right" ng-repeat="lecture in lectures track by $index" href="#/tab/home/lectures/{{lecture.id}}">
+        <h2>{{::($index + 1)}}. {{::lecture.course.name}}, {{::lecture.instructor.name}}</h2>
+        <p>신청현황 <ng-quota cur="{{::lecture.current}}" quota="{{::lecture.current_quota}}">{{::lecture.current}}/{{::lecture.quota}}<span ng-if="::(lecture.quota != lecture.current_quota)">(재학생 {{::lecture.current_quota}}명)</span></ng-quota>, {{::lecture.course.code}}({{::lecture.code}})</p>
         <i class="icon icon-accessory last-history">
           <span class="item-note" am-time-ago="lecture.last_history.created_at | toTime"></span>
         </i>

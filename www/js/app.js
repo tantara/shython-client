@@ -8,8 +8,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .constant('SERVER', {
-  //host: 'http://127.0.0.1:3000',
-  host: 'https://api-sugang.snu.ac',
+  host: 'http://192.168.0.36:5000',
+  //host: 'https://api-sugang.snu.ac',
   web: 'https://sugang.snu.ac',
 })
 
@@ -268,7 +268,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     else {
       if (next.name == 'intro') {
         event.preventDefault();
-        $state.go('tab.home', {}, {replace: true, reload: true});
+        $state.go('tab.search', {}, {replace: true, reload: true});
       }
     }
   });

@@ -7,10 +7,10 @@ angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/stats/click_ad',
         data: banner
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -22,10 +22,10 @@ angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/stats/check_notice',
         data: notice
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -43,10 +43,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/tips'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -58,10 +58,10 @@ angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/tips',
         data: tip
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -79,10 +79,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/profiles/me'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -94,10 +94,10 @@ angular.module('starter.services', [])
         method: 'PUT',
         url: SERVER.host + '/api/v1/profiles/me',
         data: data
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -115,10 +115,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/posts/' + postId
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -129,10 +129,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/posts/latest?last_id=' + lastId
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -144,10 +144,10 @@ angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/posts',
         data: data
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -166,10 +166,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/lectures/hot'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -180,10 +180,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/lectures/hot/liked'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -194,10 +194,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/lectures/search?q=' + q
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -208,10 +208,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/lectures/' + lectureId
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -222,10 +222,10 @@ angular.module('starter.services', [])
       $http({
         method: 'POST',
         url: SERVER.host + '/api/v1/lectures/' + lectureId +  '/toggle'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -237,10 +237,10 @@ angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/lectures/register',
         data: data
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -262,10 +262,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/configure'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('Signup Failed.');
       });
     });
@@ -276,10 +276,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('Signup Failed.');
       });
     });
@@ -290,10 +290,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/bookmark'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('Signup Failed.');
       });
     });
@@ -304,10 +304,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/noti'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('Signup Failed.');
       });
     });
@@ -318,10 +318,10 @@ angular.module('starter.services', [])
       $http({
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/options'
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('Signup Failed.');
       });
     });
@@ -333,10 +333,10 @@ angular.module('starter.services', [])
         method: 'PUT',
         url: SERVER.host + '/api/v1/users/me/options',
         data: {device: options, uuid: uuid, device_info: device}
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('Signup Failed.');
       });
     });
@@ -348,10 +348,10 @@ angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/users/me/device',
         data: {uuid: uuid, device: device}
-      }).then(function successCallback(response) {
-        console.log(response);
-        resolve(response);
-      }, function errorCallback(response) {
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -486,11 +486,11 @@ angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/users',
         data: {user: user}
-      }).then(function successCallback(response) {
-        console.log(response);
-        storeUserCredentials(response.data.token);
+      }).then(function successCallback(res) {
+        console.log(res);
+        storeUserCredentials(res.data.token);
         resolve('success.');
-      }, function errorCallback(response) {
+      }, function errorCallback(res) {
         reject('failed.');
       });
     });
@@ -527,8 +527,6 @@ angular.module('starter.services', [])
 })
 
 .service('ModalService', function($ionicModal, $rootScope) {
-
-
   var init = function(tpl, $scope) {
 
     var promise;
@@ -567,17 +565,17 @@ angular.module('starter.services', [])
       $rootScope.showLoading(config);
       return config;
     },
-    response: function(response) {
-      $rootScope.hideLoading(response.config);
-      return response;
+    response: function(res) {
+      $rootScope.hideLoading(res.config);
+      return res;
     },
-    responseError: function (response) {
-      $rootScope.hideLoading(response.config);
+    responseError: function (res) {
+      $rootScope.hideLoading(res.config);
       $rootScope.$broadcast({
         401: AUTH_EVENTS.notAuthenticated,
         403: AUTH_EVENTS.notAuthorized
-      }[response.status], response);
-      return $q.reject(response);
+      }[res.status], res);
+      return $q.reject(res);
     }
   };
 })
