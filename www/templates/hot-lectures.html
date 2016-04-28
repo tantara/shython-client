@@ -6,11 +6,17 @@
         on-refresh="doRefresh()">
     </ion-refresher>
     <div class="list">
+      <div class="item item-icon-left" ng-if="notice.length > 0">
+        <h2>공지사항</h2>
+        <p class="multiline-p">{{notice}}</p>
+        <i class="icon ion-ios-information-outline"></i>
+      </div>
+
       <div class="item item-divider" ng-if="header.length > 0">
         {{header}}
       </div>
 
-      <a class="item item-icon-right" ng-repeat="lecture in lectures track by $index" href="#/tab/bookmark/lectures/{{::lecture.id}}">
+      <a class="item item-icon-right" ng-repeat="lecture in lectures track by lecture.id" href="#/tab/bookmark/lectures/{{::lecture.id}}">
         <h2>{{::($index + 1)}}. {{::lecture.course.name}}, {{::lecture.instructor.name}}</h2>
         <p>신청현황 <ng-quota cur="{{::lecture.current}}" quota="{{::lecture.current_quota}}">{{::lecture.current}}/{{::lecture.quota}}<span ng-if="::(lecture.quota != lecture.current_quota)">(재학생 {{::lecture.current_quota}}명)</span></ng-quota>, {{::lecture.course.code}}({{::lecture.code}})</p>
         <i class="icon icon-accessory last-history">

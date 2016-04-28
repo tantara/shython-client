@@ -5,11 +5,17 @@
         on-refresh="doRefresh()">
     </ion-refresher>
     <div class="list">
+      <div class="item item-icon-left" ng-if="notice.length > 0">
+        <h2>공지사항</h2>
+        <p class="multiline-p">{{notice}}</p>
+        <i class="icon ion-ios-information-outline"></i>
+      </div>
+
       <div class="item item-divider" ng-if="header.length > 0">
         {{header}}
       </div>
 
-      <li class="item item-icon-right" ng-repeat="noti in notis track by $index">
+      <li class="item item-icon-right" ng-repeat="noti in notis track by noti.id">
         <h2 ng-if="noti.lecture">{{::noti.lecture.course.name}}, {{::noti.lecture.instructor.name}}</h2>
         <p>{{::noti.content}}</p>
         <i class="icon icon-accessory last-history">

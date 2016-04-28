@@ -1,11 +1,17 @@
 <ion-view view-title="학교 생활 TIP" cache-view="false">
   <ion-content>
     <div class="list">
+      <div class="item item-icon-left" ng-if="notice.length > 0">
+        <h2>공지사항</h2>
+        <p class="multiline-p">{{notice}}</p>
+        <i class="icon ion-ios-information-outline"></i>
+      </div>
+
       <div class="item item-divider" ng-if="header.length > 0">
         {{header}}
       </div>
 
-      <li class="item item-icon-right" ng-repeat="tip in tips track by $index" ng-click="openExternal('{{::tip.url}}')">
+      <li class="item item-icon-right" ng-repeat="tip in tips track by tip.id" ng-click="openExternal('{{::tip.url}}')">
         <h2>{{::($index + 1)}}. {{::tip.name}}</h2>
         <p>{{::tip.description}}. {{::tip.by}}에 의해 등록</p>
         <i class="icon ion-chevron-right icon-accessory">

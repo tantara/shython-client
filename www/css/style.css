@@ -44,3 +44,7 @@ i.last-history {
 .multiline-p {
   white-space: normal !important;
 }
+.lecture-detail a {
+  border-bottom-left-radius: 0 0 !important;
+  border-bottom-right-radius: 0 0 !important;
+}

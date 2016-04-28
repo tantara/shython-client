@@ -1,4 +1,4 @@
-angular.module('starter.routes', [])
+module.exports = angular.module('starter.routes', [])
 
 .constant('USER_ROLES', {
   user: 'user_role',
@@ -184,5 +184,9 @@ angular.module('starter.routes', [])
   ;
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/intro');
+  if(window.localStorage['yourTokenKey']){
+    $urlRouterProvider.otherwise('/tab/home');
+  }else{
+    $urlRouterProvider.otherwise('/intro');
+  }
 });

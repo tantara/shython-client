@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+module.exports = angular.module('starter.services', [])
 
 .service('StatService', function($q, $http, SERVER) {
   var clickAd = function(banner) {
@@ -157,6 +157,46 @@ angular.module('starter.services', [])
     getLatest: getLatest,
     get: get,
     register: register
+  }
+})
+
+.service('CoursesService', function($q, $http, SERVER) {
+  var get = function(courseId) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/courses/' + courseId
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
+        reject('failed.');
+      });
+    });
+  };
+
+  return {
+    get: get
+  }
+})
+
+.service('InstructorsService', function($q, $http, SERVER) {
+  var get = function(instructorId) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/instructors/' + instructorId
+      }).then(function successCallback(res) {
+        console.log(res);
+        resolve(res.data);
+      }, function errorCallback(res) {
+        reject('failed.');
+      });
+    });
+  };
+
+  return {
+    get: get
   }
 })
 

@@ -1,6 +1,19 @@
-var appVersion = "1.0.5";
+'use strict';
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment'])
+var _ = require('underscore');
+
+require('ng-cordova');
+
+require('./controllers.js');
+require('./services.js');
+require('./routes.js');
+require('./directives.js');
+require('./filters.js');
+require('./uis.js');
+
+window.appVersion = "1.0.6";
+
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment', 'ionic-toast', 'starter.uis'])
 
 .constant('AUTH_EVENTS', {
   notAuthenticated: 'auth-not-authenticated',
@@ -13,7 +26,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   web: 'https://sugang.snu.ac',
 })
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory, $cordovaKeychain) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory, $cordovaKeychain, ionicToast) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);
@@ -33,6 +46,73 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       if(apiCount == 0) {
         console.log('hideLoading');
         $ionicLoading.hide();
+      }
+    }
+  }
+
+  $rootScope.showToast = function(msg){
+    ionicToast.show(msg, 'middle', false, 1000);
+  };
+
+  $rootScope.openSugang = function() {
+    var form = AuthService.tmpLoad();
+    var oldTs = AuthService.tmpTimeLoad();
+    var curTs = parseInt((new Date()).getTime() / 1000);
+
+    if(form.id == undefined || form.id.length == 0) {
+      if(oldTs + 60 * 10 < curTs){ // 팝업을 본 적이 없으면
+        AuthService.tmpTimeSave(curTs);
+        var alertPopup = $ionicPopup.alert({
+          title: '안내',
+          template: "자동 로그인은 '더보기' 탭에서 설정해주세요.",
+          okText: "확인"
+        });
+        alertPopup.then(function(res) {
+          var url = 'https://sugang.snu.ac.kr/sugang/cc/cc100.action';
+          $rootScope.openWebview(url);
+        })
+      } else {
+        var url = 'https://sugang.snu.ac.kr/sugang/cc/cc100.action';
+        $rootScope.openWebview(url);
+      }
+    } else {
+      if(oldTs + 60 * 10 < curTs){ // 팝업을 본 적이 없으면
+        var confirmPopup = $ionicPopup.confirm({
+          title: '안내',
+          template: "자동 로그인은 앱 실행 후 한번만 시도합니다. 10분 후에 재시도합니다. 중복 로그인 메세지가 보이면 '더보기' 탭에서 '로그인 시간'을 재설정해주세요.",
+          okText: "확인",
+          cancelText: "취소"
+        });
+
+        confirmPopup.then(function(res) {
+          if(res) {
+            var url = 'https://sugang.snu.ac.kr/sugang/cc/cc100.action';
+            var ref = $rootScope.openWebview(url);
+
+            $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event){
+              if(oldTs + 60 * 10 < curTs){ // 10분간 로그인 시도 안함
+                AuthService.tmpTimeSave(curTs);
+                oldTs = curTs;
+                var code = '$.ajax({\n' +
+                          'type: "POST",\n' +
+                          'url: "https://sugang.snu.ac.kr/sugang/j_login",\n' +
+                          'data: "j_username=' + form.id + "&j_password=" + form.password + '",\n' +
+                          'success: function() { alert("학번 및 비밀번호를 확인해주세요") },\n' +
+                          'error: function(e) { window.location = "https://sugang.snu.ac.kr/sugang/cc/cc210.action" },\n' +
+                          'contentType : "application/x-www-form-urlencoded"\n' +
+                        '});';
+                $cordovaInAppBrowser.executeScript({
+                  code: code
+                });
+              }
+            });
+          } else {
+            //
+          }
+        });
+      } else {
+        var url = 'https://sugang.snu.ac.kr/sugang/cc/cc210.action';
+        $rootScope.openWebview(url);
       }
     }
   }
@@ -268,7 +348,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     else {
       if (next.name == 'intro') {
         event.preventDefault();
-        $state.go('tab.search', {}, {replace: true, reload: true});
+        $state.go('tab.home', {}, {replace: true, reload: true});
       }
     }
   });

@@ -1,4 +1,4 @@
-angular.module('starter.filters', [])
+module.exports = angular.module('starter.filters', [])
 
 .filter('courseType2Str', function() {
   return function(type) {

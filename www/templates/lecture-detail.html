@@ -8,7 +8,7 @@
       <h4><ng-quota cur="{{lecture.current}}" quota="{{lecture.current_quota}}">현재 {{lecture.current}}명</ng-quota> / 정원 {{lecture.quota}}명<span ng-if="lecture.quota != lecture.current_quota">(재학생 {{lecture.current_quota}}명)</span></h4>
       <p></p>
 
-      <div class="button-bar bar-stable">
+      <div class="button-bar bar-stable lecture-detail">
         <a class="button" ng-class="{'button-positive': tab==1}" ng-click="tabChanged(1)">통계</a>
         <a class="button" ng-class="{'button-positive': tab==2}" ng-click="tabChanged(2)">정보</a>
       </div>
@@ -19,9 +19,9 @@
         </li>
         <li class="item">{{lecture.bookmarkCount}}명</li>
         <li class="item item-divider" ng-if="similar_lectures.length > 0">
-          유사 강의
+          {{similar_header}}
         </li>
-        <li class="item" ng-repeat="l in similar_lectures track by $index">
+        <li class="item" ng-repeat="l in similar_lectures track by l.id">
           <h2>{{::($index + 1)}}. {{::l.course.name}}, {{::l.instructor.name}}</h2>
           <p>신청현황 <ng-quota cur="{{::l.current}}" quota="{{::l.current_quota}}">{{::l.current}}/{{::l.quota}}<span ng-if="::(l.quota != l.current_quota)">(재학생 {{::l.current_quota}}명)</span></ng-quota>, {{::l.course.code}}({{::l.code}})</p>
         </li>
@@ -31,7 +31,7 @@
         <li class="item" ng-if="lecture.lecture_histories.length == 0">
           데이터 없음
         </li>
-        <li class="item" ng-repeat="h in lecture.lecture_histories track by $index">
+        <li class="item" ng-repeat="h in lecture.lecture_histories track by h.id">
           {{::h.content}}
           <br><span am-time-ago="h.created_at | toTime"></span> 
         </li>

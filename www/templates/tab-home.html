@@ -1,4 +1,7 @@
-<ion-view view-title="{{season}}">
+<ion-view>
+  <ion-nav-title>
+    <span ng-click="openSugang()">{{season}} <i class="icon ion-arrow-down-b" ng-if="season.length > 0"></i></span>
+  </ion-nav-title>
   <ion-nav-buttons side="right">
     <a ng-if="mode=='search'" class="button" ng-click="init()">
       <i class="icon ion-close"></i>
@@ -27,7 +30,7 @@
 
     <div class="padding padding-abb" ng-if="abb.length > 0">
       <button class="button button-clear button-xsmall button-dark">{{abbText}}</button>
-      <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb track by $index" ng-click="search(a)">
+      <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb track by abb.id" ng-click="search(a)">
         {{::a}}
       </button>
       <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-if="mode=='search'">축약어 추가하기</button>
@@ -49,7 +52,7 @@
         {{header}}
       </div>
 
-      <a class="item item-icon-right" ng-repeat="lecture in lectures track by $index" href="#/tab/home/lectures/{{lecture.id}}">
+      <a class="item item-icon-right" ng-repeat="lecture in lectures track by lecture.id" href="#/tab/home/lectures/{{::lecture.id}}">
         <h2>{{::($index + 1)}}. {{::lecture.course.name}}, {{::lecture.instructor.name}}</h2>
         <p>신청현황 <ng-quota cur="{{::lecture.current}}" quota="{{::lecture.current_quota}}">{{::lecture.current}}/{{::lecture.quota}}<span ng-if="::(lecture.quota != lecture.current_quota)">(재학생 {{::lecture.current_quota}}명)</span></ng-quota>, {{::lecture.course.code}}({{::lecture.code}})</p>
         <i class="icon icon-accessory last-history">

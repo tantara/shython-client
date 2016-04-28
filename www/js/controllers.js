@@ -1,4 +1,6 @@
-angular.module('starter.controllers', [])
+var _ = require('underscore');
+
+module.exports = angular.module('starter.controllers', [])
 
 .controller('TabCtrl', function($scope, $state) {
 })
@@ -275,6 +277,7 @@ angular.module('starter.controllers', [])
 
   $scope.lectures = [];
   $scope.header = "";
+  $scope.notice = "";
   $scope.recommend_lectures = [];
   $scope.recommend_header = "";
 
@@ -290,6 +293,7 @@ angular.module('starter.controllers', [])
       } else {
         $scope.header = res.header;
       }
+      $scope.notice = res.notice;
       $scope.recommend_lectures = res.recommend_lectures;
       $scope.recommend_header = res.recommend_header;
       $scope.$broadcast('scroll.refreshComplete');
@@ -314,6 +318,7 @@ angular.module('starter.controllers', [])
 
   $scope.lectures = [];
   $scope.header = "";
+  $scope.notice = "";
 
   $scope.doRefresh = function() {
     $scope.init();
@@ -323,6 +328,7 @@ angular.module('starter.controllers', [])
     LecturesService.hotLiked().then(function(res) {
       $scope.lectures = res.lectures;
       $scope.header = res.header;
+      $scope.notice = res.notice;
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
@@ -418,66 +424,7 @@ angular.module('starter.controllers', [])
   }
 
   $scope.registerLecture = function(lecture) {
-    var form = AuthService.tmpLoad();
-    var oldTs = AuthService.tmpTimeLoad();
-    var curTs = parseInt((new Date()).getTime() / 1000);
-
-    if(form.id == undefined || form.id.length == 0) {
-      if(oldTs + 60 * 10 < curTs){ // 팝업을 본 적이 없으면
-        AuthService.tmpTimeSave(curTs);
-        var alertPopup = $ionicPopup.alert({
-          title: '안내',
-          template: "자동 로그인은 '더보기' 탭에서 설정해주세요.",
-          okText: "확인"
-        });
-        alertPopup.then(function(res) {
-          var url = 'https://sugang.snu.ac.kr/sugang/cc/cc100.action';
-          $rootScope.openWebview(url);
-        })
-      } else {
-        var url = 'https://sugang.snu.ac.kr/sugang/cc/cc100.action';
-        $rootScope.openWebview(url);
-      }
-    } else {
-      if(oldTs + 60 * 10 < curTs){ // 팝업을 본 적이 없으면
-        var confirmPopup = $ionicPopup.confirm({
-          title: '안내',
-          template: "자동 로그인은 앱 실행 후 한번만 시도합니다. 10분 후에 재시도합니다. 중복 로그인 메세지가 보이면 '더보기' 탭에서 '로그인 시간'을 재설정해주세요.",
-          okText: "확인",
-          cancelText: "취소"
-        });
-
-        confirmPopup.then(function(res) {
-          if(res) {
-            var url = 'https://sugang.snu.ac.kr/sugang/cc/cc100.action';
-            var ref = $rootScope.openWebview(url);
-
-            $rootScope.$on('$cordovaInAppBrowser:loadstop', function(e, event){
-              if(oldTs + 60 * 10 < curTs){ // 10분간 로그인 시도 안함
-                AuthService.tmpTimeSave(curTs);
-                oldTs = curTs;
-                var code = '$.ajax({\n' +
-                          'type: "POST",\n' +
-                          'url: "https://sugang.snu.ac.kr/sugang/j_login",\n' +
-                          'data: "j_username=' + form.id + "&j_password=" + form.password + '",\n' +
-                          'success: function() { alert("학번 및 비밀번호를 확인해주세요") },\n' +
-                          'error: function(e) { window.location = "https://sugang.snu.ac.kr/sugang/cc/cc210.action" },\n' +
-                          'contentType : "application/x-www-form-urlencoded"\n' +
-                        '});';
-                $cordovaInAppBrowser.executeScript({
-                  code: code
-                });
-              }
-            });
-          } else {
-            //
-          }
-        });
-      } else {
-        var url = 'https://sugang.snu.ac.kr/sugang/cc/cc210.action';
-        $rootScope.openWebview(url);
-      }
-    }
+    $rootScope.openSugang();
   }
 
   $scope.openLecture = function(lecture) {
@@ -488,6 +435,11 @@ angular.module('starter.controllers', [])
   $scope.toggle = function(lectureId) {
     LecturesService.toggle(lectureId).then(function(res) {
       $scope.lecture.isBookmarked = res.isBookmarked;
+      if($scope.lecture.isBookmarked) {
+        $rootScope.showToast('알림이 등록되었습니다.');
+      } else {
+        $rootScope.showToast('알림이 해제되었습니다.');
+      }
     }, function(err) {
       var alertPopup = $ionicPopup.alert({
         title: '에러',
@@ -500,6 +452,7 @@ angular.module('starter.controllers', [])
   LecturesService.get($stateParams.lectureId).then(function(res) {
     $scope.lecture = res.lecture;
     $scope.similar_lectures = res.similar_lectures;
+    $scope.similar_header = res.similar_header;
     $scope.lecture.isBookmarked = res.isBookmarked;
     $scope.lecture.bookmarkCount = res.bookmark_count;
     $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
@@ -547,8 +500,9 @@ angular.module('starter.controllers', [])
     console.log(ctrlName);
     if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
   })
-  
+
   $scope.post = {};
+  $scope.notice = "";
 
   $scope.contact = function() {
     if($scope.post.link) {
@@ -564,6 +518,7 @@ angular.module('starter.controllers', [])
 
   PostsService.get($stateParams.postId).then(function(res) {
     $scope.post = res.post;
+    $scope.notice = res.notice;
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -584,6 +539,7 @@ angular.module('starter.controllers', [])
   $scope.lastId = 0;
   $scope.posts = [];
   $scope.header = "";
+  $scope.notice = "";
 
   $scope.doRefresh = function() {
     $scope.lastId = 0;
@@ -601,8 +557,9 @@ angular.module('starter.controllers', [])
       if($scope.posts.length == 0) {
         $scope.header = "교환이 가능한 강의가 없습니다.";
       } else {
-        $scope.header = "";
+        $scope.header = res.header;
       }
+      $scope.notice = res.notice;
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }, function(err) {
@@ -725,9 +682,11 @@ angular.module('starter.controllers', [])
 
   $scope.profileForm = {};
   $scope.years = _.range(2016, 1990, -1);
+  $scope.notice = "";
 
   ProfileService.get().then(function(res) {
     $scope.profileForm = res.profile;
+    $scope.notice = res.notice;
   }, function(err) {
     var alertPopup = $ionicPopup.alert({
       title: '에러',
@@ -854,6 +813,7 @@ angular.module('starter.controllers', [])
 
   $scope.notis = [];
   $scope.header = "";
+  $scope.notice = "";
 
   $scope.doRefresh = function() {
     $scope.init();
@@ -862,10 +822,11 @@ angular.module('starter.controllers', [])
   $scope.init = function() {
     UsersService.getNoti().then(function(res) {
       $scope.notis = res.notis;
+      $scope.notice = res.notice;
       if($scope.notis.length == 0) {
         $scope.header = '즐겨찾기한 강좌의 변동사항이 없습니다.';
       } else {
-        $scope.header = "";
+        $scope.header = res.header;
       }
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {

@@ -1,4 +1,4 @@
-angular.module('starter.directives', [])
+module.exports = angular.module('starter.directives', [])
 
 .directive('ngEnter', function() {
   return function(scope, element, attrs) {

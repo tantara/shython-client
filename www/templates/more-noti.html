@@ -1,11 +1,17 @@
 <ion-view view-title="변동사항">
   <ion-content>
     <div class="list">
+      <div class="item item-icon-left" ng-if="notice.length > 0">
+        <h2>공지사항</h2>
+        <p class="multiline-p">{{notice}}</p>
+        <i class="icon ion-ios-information-outline"></i>
+      </div>
+
       <div class="item item-divider" ng-if="header.length > 0">
         {{header}}
       </div>
 
-      <a class="item item-icon-right" ng-repeat="noti in notis track by $index" href="#/tab/more/lectures/{{::noti.lecture.id}}">
+      <a class="item item-icon-right" ng-repeat="noti in notis track by noti.id" href="#/tab/more/lectures/{{::noti.lecture.id}}">
         <h2>{{::($index + 1)}}. {{::noti.lecture.course.name}}, {{::noti.lecture.instructor.name}}</h2>
         <p>{{::noti.content}}</p>
         <i class="icon icon-accessory last-history">

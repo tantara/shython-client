@@ -1,6 +1,12 @@
 <ion-view view-title="더보기" cache-view="false">
   <ion-content>
     <ion-list>
+      <div class="item item-icon-left" ng-if="notice.length > 0">
+        <h2>공지사항</h2>
+        <p class="multiline-p">{{notice}}</p>
+        <i class="icon ion-ios-information-outline"></i>
+      </div>
+
       <div class="item item-divider">
         계정
       </div>
@@ -73,7 +79,13 @@
         문의하기
         <i class="icon ion-chevron-right icon-accessory"></i>
       </li>
-    </ion-list>
 
+      <div class="item item-divider">감사의 말</div>
+
+      <div class="item item-icon-left">
+        <p class="multiline-p">많은 학우 분들이 이용해주셔서 스누라이프 공모전 'SANDBOX 2016'에서 우승을 할 수 있었습니다. 앞으로도 좋은 기능 추가하겠습니다. 감사합니다.</p>
+        <i class="icon ion-trophy"></i>
+      </div>
+    </ion-list>
   </ion-content>
 </ion-view>
