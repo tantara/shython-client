@@ -353,6 +353,7 @@ module.exports = angular.module('starter.controllers', [])
   $scope.lecture = {};
   $scope.similar_lectures = [];
   $scope.remark = false;
+  $scope.notice = ""
 
   $scope.tabChanged = function(tab) {
     if($scope.tab != tab) {
@@ -457,6 +458,7 @@ module.exports = angular.module('starter.controllers', [])
     $scope.lecture.bookmarkCount = res.bookmark_count;
     $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
     $scope.lecture.location_arr = $scope.lecture.location_str.split("/");
+    $scope.notice = res.notice;
     console.log($scope.lecture);
   }, function(err) {
     var alertPopup = $ionicPopup.alert({

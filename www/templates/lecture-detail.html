@@ -5,6 +5,12 @@
   </ion-nav-buttons>
   <ion-content class="padding">
     <div class="scroll">
+      <div class="item item-icon-left" ng-if="notice.length > 0">
+        <h2>공지사항</h2>
+        <p class="multiline-p">{{notice}}</p>
+        <i class="icon ion-ios-information-outline"></i>
+      </div>
+
       <h4><ng-quota cur="{{lecture.current}}" quota="{{lecture.current_quota}}">현재 {{lecture.current}}명</ng-quota> / 정원 {{lecture.quota}}명<span ng-if="lecture.quota != lecture.current_quota">(재학생 {{lecture.current_quota}}명)</span></h4>
       <p></p>
 

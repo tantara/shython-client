@@ -359,4 +359,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   $ionicConfigProvider.views.swipeBackEnabled(false);
   $ionicConfigProvider.backButton.text('');
   $ionicConfigProvider.backButton.previousTitleText(false);
+  $ionicConfigProvider.scrolling.jsScrolling(false);
 })

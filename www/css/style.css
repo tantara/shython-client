@@ -1,5 +1,8 @@
 /* Empty. Add your own CSS if you like */
 
+-webkit-transform: translateZ(0);
+-webkit-transform: translate3d(0, 0, 0);
+
 .tabs-striped .tab-item {
   border-color: #11c1f3 !important;
 }
