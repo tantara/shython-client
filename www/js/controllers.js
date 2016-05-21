@@ -723,6 +723,10 @@ module.exports = angular.module('starter.controllers', [])
   UsersService.getOptions().then(function(res) {
     $scope.options = res;
     $scope.latestVersion = appVersion;
+    var uuid = AuthService.loadPushToken();
+    if(uuid == undefined || uuid.length == 0) {
+      $scope.options.on = false;
+    }
     if(ionic.Platform.isIOS()) {
       $scope.latestVersion = $scope.options.version.ios;
     } else if(ionic.Platform.isAndroid()) {
@@ -745,7 +749,7 @@ module.exports = angular.module('starter.controllers', [])
       });
     } else {
       var uuid = AuthService.loadPushToken();
-      if((uuid == undefined || uuid.length == 0) && $scope.options.no_device) {
+      if((uuid == undefined || uuid.length == 0) || $scope.options.no_device) {
         $scope.options.on = false;
         $rootScope.initPush();
       } else {

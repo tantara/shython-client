@@ -16,7 +16,7 @@ window.appVersion = "1.0.6";
 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment', 'ionic-toast', 'starter.uis', 'starter.constants'])
 
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory, $cordovaKeychain, ionicToast, ModalService) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory, $cordovaKeychain, ionicToast, ModalService, $timeout) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);
@@ -220,15 +220,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     });
 
     push.on('notification', function(data) {
+      //console.log(JSON.stringify(data));
+
       var info = data;
-      //if(ionic.Platform.isIOS()) {
-      info = data.additionalData;
-      //}
-      if(info.action == "review") {
+      var additionalData = info.additionalData;
+      if(ionic.Platform.isIOS()) {
+        info = data.additionalData;
+      }
+      if(additionalData.action == "review") {
         $rootScope.openReview();
         AppRate.promptForRating(true);
-      } else if(info.action == "url") {
-        $rootScope.openWebview(info.url);
+      } else if(additionalData.action == "url") {
+        $rootScope.openWebview(additionalData.url);
       } else {
         var alertPopup = $ionicPopup.alert({
           title: info.title,
@@ -374,6 +377,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
 
     if(ionic.Platform.isWebView()) {
+      console.log('init push');
       $rootScope.initPush();
     };
   });
