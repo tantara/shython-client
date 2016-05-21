@@ -13,12 +13,43 @@
         <i class="icon ion-ios-information-outline"></i>
       </div>
 
-      <h4>제목 {{post.title}}</h4>
-      <p>내용</p>
+      <h4 class="post-title">{{post.title}}</h4>
       <p>{{post.content}}</p>
+      <p class="text-right post-date dark">
+        <span am-time-ago="post.created_at | toTime"></span> 작성
+      </p>
       <div ng-if="post.link">
         <p>오픈채팅 링크</p>
         <p>{{post.link}}</p>
+      </div>
+
+      <div class="list">
+        <a class="item item-divider item-accessory item-icon-right" ng-click="refreshComments()">
+          <p>댓글 {{post.comments.length}}개</p>
+          <i class="icon icon-accessory" ng-if="!loaded">
+            로딩중...
+          </i>
+          <i class="icon ion-refresh icon-accessory" ng-if="loaded">
+          </i>
+        </a>
+        <div class="item" ng-if="post.comments.length == 0">
+          <p class="multiline-p text-center">첫 댓글을 작성해주세요!!</p>
+        </div>
+        <div class="item item-icon-right" ng-repeat="comment in post.comments track by comment.id">
+          <p>{{::comment.content}}</p>
+          <i class="icon icon-accessory last-history-only-text">
+            <span class="item-note" am-time-ago="comment.created_at | toTime"></span>
+          </i>
+        </div>
+      </div>
+
+      <div class="list">
+        <label class="item item-input item-stacked-label">
+          <span class="input-label">댓글 쓰기</span>
+          <textarea ng-model="form.content" ng-disabled="blocked">
+          </textarea>
+        </label>
+        <button ng-click="write()" class="button button-positive button-block" ng-if="form.content.length >= 0" ng-disabled="blocked || !(form.content.length > 0)">글쓰기</button>
       </div>
     </div>
   </ion-content>

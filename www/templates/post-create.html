@@ -21,7 +21,7 @@
         <input type="url" placeholder="연락수단" ng-model="form.link">
       </label>
       <div class="padding">
-        <button ng-click="write()" class="button button-positive button-block">글쓰기</button>
+        <button ng-click="write()" class="button button-positive button-block" ng-disabled="!(form.title.length > 0 && form.content.length > 0)">글쓰기</button>
       </div>
     </div>
     <div class="card">

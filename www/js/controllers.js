@@ -543,7 +543,7 @@ module.exports = angular.module('starter.controllers', [])
   };
 })
 
-.controller('PostDetailCtrl', function($scope, $ionicPopup, PostsService, $stateParams, $window) {
+.controller('PostDetailCtrl', function($scope, $ionicPopup, PostsService, $stateParams, $window, CommentsService) {
   $scope.$on('$ionicView.enter', function() {
     var ctrlName = "Post Detail Controller";
     console.log(ctrlName);
@@ -552,6 +552,48 @@ module.exports = angular.module('starter.controllers', [])
 
   $scope.post = {};
   $scope.notice = "";
+  $scope.form = {}
+  $scope.loaded = true;
+
+  $scope.refreshComments = function() {
+    if(!$scope.loaded) return;
+
+    $scope.loaded = false;
+
+    PostsService.getComments($stateParams.postId).then(function(res) {
+      $scope.loaded = true;
+      $scope.post.comments = res.comments;
+    }, function(err) {
+      $scope.loaded = true;
+      $scope.post.comments = res.comments;
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
+
+  $scope.blocked = false;
+  $scope.write = function() {
+    $scope.form.post_id = $stateParams.postId;
+    $scope.blocked = true;
+
+    CommentsService.register($scope.form).then(function(res) {
+      if(res.success) {
+        $scope.form.content = "";
+        $scope.post.comments = $scope.post.comments.concat(res.comment);
+      }
+      $scope.blocked = false;
+    }, function(err) {
+      $scope.blocked = false;
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
 
   $scope.contact = function() {
     if($scope.post.link) {
@@ -703,21 +745,26 @@ module.exports = angular.module('starter.controllers', [])
       });
     } else {
       var uuid = AuthService.loadPushToken();
-      var device = AuthService.loadDeviceInfo();
-      UsersService.editOptions($scope.options, uuid, device).then(function(res) {
-        var alertPopup = $ionicPopup.alert({
-          title: '안내',
-          template: res.msg,
-          okText: "확인"
+      if((uuid == undefined || uuid.length == 0) && $scope.options.no_device) {
+        $scope.options.on = false;
+        $rootScope.initPush();
+      } else {
+        var device = AuthService.loadDeviceInfo();
+        UsersService.editOptions($scope.options, uuid, device).then(function(res) {
+          var alertPopup = $ionicPopup.alert({
+            title: '안내',
+            template: res.msg,
+            okText: "확인"
+          });
+          $scope.options = res.options;
+        }, function(err) {
+          var alertPopup = $ionicPopup.alert({
+            title: '에러',
+            template: '정보를 가져오는데 문제가 생겼습니다.',
+            okText: "확인"
+          });
         });
-        $scope.options = res.options;
-      }, function(err) {
-        var alertPopup = $ionicPopup.alert({
-          title: '에러',
-          template: '정보를 가져오는데 문제가 생겼습니다.',
-          okText: "확인"
-        });
-      });
+      }
     }
   }
 })

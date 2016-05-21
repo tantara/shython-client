@@ -179,6 +179,76 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     AppRate.promptForRating();
   }
 
+  $rootScope.initPush = function() {
+    cordova.getAppVersion(function(version) {
+      appVersion = version;
+    });
+
+    var info = {};
+    info.device = $cordovaDevice.getDevice();
+
+    info.cordova = $cordovaDevice.getCordova();
+
+    info.model = $cordovaDevice.getModel();
+
+    info.platform = $cordovaDevice.getPlatform();
+
+    info.uuid = $cordovaDevice.getUUID();
+
+    info.version = $cordovaDevice.getVersion();
+
+    AuthService.storeDeviceInfo(info);
+
+    var push = PushNotification.init({
+      android: {
+        senderID: "607566472910",
+        "icon": "ic_stat_icon_material",
+        "iconColor": "grey"
+      },
+      ios: {
+        alert: "true",
+        badge: "true",
+        sound: "true"
+      },
+      windows: {}
+    });
+
+    push.on('registration', function(data) {
+      // data.registrationId
+      console.log(data.registrationId);
+      AuthService.storePushToken(data.registrationId);
+    });
+
+    push.on('notification', function(data) {
+      var info = data;
+      //if(ionic.Platform.isIOS()) {
+      info = data.additionalData;
+      //}
+      if(info.action == "review") {
+        $rootScope.openReview();
+        AppRate.promptForRating(true);
+      } else if(info.action == "url") {
+        $rootScope.openWebview(info.url);
+      } else {
+        var alertPopup = $ionicPopup.alert({
+          title: info.title,
+          template: info.message,
+          okText: "확인"
+        });
+      }
+      // data.message,
+      // data.title,
+      // data.count,
+      // data.sound,
+      // data.image,
+      // data.additionalData
+    });
+
+    push.on('error', function(e) {
+      // e.message
+    });
+  }
+
   $rootScope.openAd = function() {
     var admobid = {};
     var isTesting = false;
@@ -304,73 +374,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
 
     if(ionic.Platform.isWebView()) {
-      cordova.getAppVersion(function(version) {
-        appVersion = version;
-      });
-
-      var info = {};
-      info.device = $cordovaDevice.getDevice();
-
-      info.cordova = $cordovaDevice.getCordova();
-
-      info.model = $cordovaDevice.getModel();
-
-      info.platform = $cordovaDevice.getPlatform();
-
-      info.uuid = $cordovaDevice.getUUID();
-
-      info.version = $cordovaDevice.getVersion();
-
-      AuthService.storeDeviceInfo(info);
-
-      var push = PushNotification.init({
-        android: {
-          senderID: "607566472910",
-          "icon": "ic_stat_icon_material",
-          "iconColor": "grey"
-        },
-        ios: {
-          alert: "true",
-          badge: "true",
-          sound: "true"
-        },
-        windows: {}
-      });
-
-      push.on('registration', function(data) {
-        // data.registrationId
-        console.log(data.registrationId);
-        AuthService.storePushToken(data.registrationId);
-      });
-
-      push.on('notification', function(data) {
-        var info = data;
-        //if(ionic.Platform.isIOS()) {
-          info = data.additionalData;
-        //}
-        if(info.action == "review") {
-          $rootScope.openReview();
-          AppRate.promptForRating(true);
-        } else if(info.action == "url") {
-          $rootScope.openWebview(info.url);
-        } else {
-          var alertPopup = $ionicPopup.alert({
-            title: info.title,
-            template: info.message,
-            okText: "확인"
-          });
-        }
-        // data.message,
-        // data.title,
-        // data.count,
-        // data.sound,
-        // data.image,
-        // data.additionalData
-      });
-
-      push.on('error', function(e) {
-        // e.message
-      });
+      $rootScope.initPush();
     };
   });
 

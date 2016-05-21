@@ -111,7 +111,42 @@ module.exports = angular.module('starter.services', ['starter.templates'])
   }
 })
 
+.service('CommentsService', function($q, $http, SERVER) {
+  var register = function(data) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'POST',
+        url: SERVER.host + '/api/v1/comments',
+        data: data
+      }).then(function successCallback(res) {
+        console.log(res.data);
+        resolve(res.data);
+      }, function errorCallback(res) {
+        reject('failed.');
+      });
+    });
+  };
+
+  return {
+    register: register
+  }
+})
+
 .service('PostsService', function($q, $http, SERVER) {
+  var getComments = function(postId) {
+    return $q(function(resolve, reject) {
+      $http({
+        method: 'GET',
+        url: SERVER.host + '/api/v1/posts/' + postId + '/comments'
+      }).then(function successCallback(res) {
+        console.log(res.data);
+        resolve(res.data);
+      }, function errorCallback(res) {
+        reject('failed.');
+      });
+    });
+  };
+
   var get = function(postId) {
     return $q(function(resolve, reject) {
       $http({
@@ -158,6 +193,7 @@ module.exports = angular.module('starter.services', ['starter.templates'])
   return {
     getLatest: getLatest,
     get: get,
+    getComments: getComments,
     register: register
   }
 })

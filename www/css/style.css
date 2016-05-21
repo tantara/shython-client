@@ -4,6 +4,10 @@
   border-color: #11c1f3 !important;
 }
 
+i.icon-note-accessory {
+  padding-right: 25px;
+}
+
 .button.pressed {
   color: #11c1f3;
 }
@@ -33,6 +37,9 @@
 }
 i.last-history {
   padding-right: 25px;
+}
+i.last-history-only-text {
+  padding-right: 10px;
 }
 .padding-abb {
   line-height: 30px;
@@ -106,3 +113,27 @@ iframe {
 .drop-str p {
   margin: 0;
 }
+.post-date {
+}
+.modal-wrapper ion-header-bar.bar-header {
+  padding-right: 0;
+}
+.modal-button {
+  padding: 0 !important;
+}
+
+.slide-in-right {
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%); }
+
+.slide-in-right.ng-enter, .slide-in-right > .ng-enter {
+  -webkit-transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms;
+  transition: all cubic-bezier(0.1, 0.7, 0.1, 1) 400ms; }
+
+.slide-in-right.ng-enter-active, .slide-in-right > .ng-enter-active {
+  -webkit-transform: translateX(0);
+  transform: translateX(0); }
+
+.slide-in-right.ng-leave, .slide-in-right > .ng-leave {
+  -webkit-transition: all ease-in-out 250ms;
+  transition: all ease-in-out 250ms; }

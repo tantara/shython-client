@@ -24,7 +24,7 @@
         </select>
       </label>
       <div class="padding">
-        <button ng-click="save()" class="button button-positive button-block">저장하기</button>
+        <button ng-click="save()" class="button button-positive button-block" ng-disabled="!(profileForm.year.length > 0 && profileForm.state.length > 0)">저장하기</button>
       </div>
     </div>
     <div class="card">

@@ -1,10 +1,10 @@
 <ion-modal-view ng-controller="LectureDetailCtrl" ng-init="init()">
   <ion-header-bar class="bar-positive fix-buttons">
-    <a class="button back-button" ng-click="close()">
+    <a class="button modal-button back-button" ng-click="close()">
       <i class="icon ion-close"></i>
     </a>
     <h1 class="title">{{lecture.course.name}} - {{lecture.instructor.name}}</h1>
-    <a class="button button-icon back-button" ng-class="{'ion-ios-star-outline': !lecture.isBookmarked, 'ion-ios-star': lecture.isBookmarked}" ng-click="toggle(lecture.id)"></a>
+    <a class="button button-icon modal-button" ng-class="{'ion-ios-star-outline': !lecture.isBookmarked, 'ion-ios-star': lecture.isBookmarked}" ng-click="toggle(lecture.id)"></a>
   </ion-header-bar>
   <ion-content class="padding">
     <div class="scroll">

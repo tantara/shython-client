@@ -30,7 +30,7 @@
 
     <div class="padding padding-abb" ng-if="abb.length > 0">
       <button class="button button-clear button-xsmall button-dark">{{abbText}}</button>
-      <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb track by abb.id" ng-click="search(a)">
+      <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb" ng-click="search(a)">
         {{::a}}
       </button>
       <button class="button button-outline button-xsmall button-dark" ng-click="showAbbModal()" ng-if="mode=='search'">축약어 추가하기</button>
@@ -52,7 +52,13 @@
         {{header}}
       </div>
 
-      <a class="item item-icon-right" ng-repeat="lecture in lectures track by lecture.id" ng-click="showLecture({{::lecture.id}})">
+      <div class="item" ng-if="header.length > 0 && lectures.length == 0">
+        <p class="multiline-p text-center">
+          help.shython@gmail.com으로 해당 강의를 문의해주세요.
+        </p>
+      </div>
+
+      <a class="item item-icon-right" ng-repeat="lecture in lectures" ng-click="showLecture({{::lecture.id}})">
         <h2>{{::($index + 1)}}. {{::lecture.course.name}}, {{::lecture.instructor.name}}</h2>
         <p>신청현황 <ng-quota cur="{{::lecture.current}}" quota="{{::lecture.current_quota}}">{{::lecture.current}}/{{::lecture.quota}}<span ng-if="::(lecture.quota != lecture.current_quota)">(재학생 {{::lecture.current_quota}}명)</span></ng-quota>, {{::lecture.course.code}}({{::lecture.code}})</p>
         <i class="icon icon-accessory last-history">

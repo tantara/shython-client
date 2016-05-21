@@ -18,6 +18,12 @@
         {{header}}
       </div>
 
+      <div class="item" ng-if="lectures.length == 0">
+        <p class="multiline-p text-center">
+        강의 상세 페이지에서 즐겨찾기<i class="icon ion-star"></i>를 해주세요!!
+        </p>
+      </div>
+
       <a class="item item-icon-right" ng-repeat="lecture in lectures track by lecture.id" ng-click="showLecture({{::lecture.id}})">
         <h2>{{::($index + 1)}}. {{::lecture.course.name}}, {{::lecture.instructor.name}}</h2>
         <p>신청현황 <ng-quota cur="{{::lecture.current}}" quota="{{::lecture.current_quota}}">{{::lecture.current}}/{{::lecture.quota}}<span ng-if="::(lecture.quota != lecture.current_quota)">(재학생 {{::lecture.current_quota}}명)</span></ng-quota>, {{::lecture.course.code}}({{::lecture.code}})</p>

@@ -24,7 +24,7 @@
         <input type="password" placeholder="수강신청 비밀번호" ng-model="form.password">
       </label>
       <div class="padding">
-        <button ng-click="save()" class="button button-positive button-block">저장하기</button>
+        <button ng-click="save()" class="button button-positive button-block" ng-disabled="!(form.id.length > 0 && form.password.length > 0)">저장하기</button>
       </div>
     </div>
     <div class="card">
