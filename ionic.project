@@ -8,6 +8,7 @@
   ],
   "watchPatterns": [
     "www/**/*",
+    "!www/templates/**/*",
     "!www/dist/*",
     "www/dist/app.min.js",
     "!www/js/*",

@@ -10,23 +10,13 @@ require('./routes.js');
 require('./directives.js');
 require('./filters.js');
 require('./uis.js');
+require('./constants.js');
 
 window.appVersion = "1.0.6";
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment', 'ionic-toast', 'starter.uis'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.routes', 'starter.directives', 'ngCordova', 'starter.filters', 'angularMoment', 'ionic-toast', 'starter.uis', 'starter.constants'])
 
-.constant('AUTH_EVENTS', {
-  notAuthenticated: 'auth-not-authenticated',
-  notAuthorized: 'auth-not-authorized'
-})
-
-.constant('SERVER', {
-  host: 'http://192.168.0.36:5000',
-  //host: 'https://api-sugang.snu.ac',
-  web: 'https://sugang.snu.ac',
-})
-
-.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory, $cordovaKeychain, ionicToast) {
+.run(function($ionicPlatform, $rootScope, $state, AuthService, AUTH_EVENTS, $ionicLoading, SERVER, $ionicPopup, $cordovaDevice, $window, $cordovaInAppBrowser, $ionicHistory, $cordovaKeychain, ionicToast, ModalService) {
   var apiCount = 0;
   $rootScope.showLoading = function(config) {
     var isApi = config.url.match(SERVER.host);
@@ -53,6 +43,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   $rootScope.showToast = function(msg){
     ionicToast.show(msg, 'middle', false, 1000);
   };
+
+  $rootScope.showLecture = function(lecture) {
+    ModalService.showLecture(lecture);
+  }
+
+  $rootScope.showCourse = function(course) {
+    ModalService.showCourse(course);
+  }
+
+  $rootScope.showInstructor = function(instructor) {
+    ModalService.showInstructor(instructor);
+  }
 
   $rootScope.openSugang = function() {
     var form = AuthService.tmpLoad();
@@ -177,6 +179,35 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     AppRate.promptForRating();
   }
 
+  $rootScope.openAd = function() {
+    var admobid = {};
+    var isTesting = false;
+
+    if(window.AdMob) {
+      if(ionic.Platform.isAndroid()) {
+        admobid = {
+          banner: 'ca-app-pub-6165819145047862/6639781434',
+          interstitial: 'ca-app-pub-6165819145047862/8116514630'
+        };
+        AdMob.createBanner({
+          isTesting: isTesting,
+          adId: admobid.banner,
+          position: AdMob.AD_POSITION.BOTTOM_CENTER,
+          autoShow: true });
+      } else if(ionic.Platform.isIOS()) {
+        admobid = {
+          banner: 'ca-app-pub-6165819145047862/2069981032',
+          interstitial: 'ca-app-pub-6165819145047862/3546714236'
+        };
+        AdMob.createBanner({
+          isTesting: isTesting,
+          adId: admobid.banner,
+          position: AdMob.AD_POSITION.BOTTOM_CENTER,
+          autoShow: true });
+      }
+    }
+  }
+
   $ionicPlatform.registerBackButtonAction(function(e){
     if ($rootScope.backButtonPressedOnceToExit) {
       ionic.Platform.exitApp();
@@ -255,6 +286,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
     if(ionic.Platform.isWebView()) {
       $rootScope.openReview();
+      $timeout(function() {
+        //$rootScope.openAd(); //FIXME
+      }, 1500);
+    }
+
+    console.log("fb");
+    console.log(window.facebookConnectPlugin);
+    if(window.facebookConnectPlugin) {
+      console.log("fb activate app");
+      window.facebookConnectPlugin.activateApp(function(obj) {
+        console.log("fb success", obj);
+      },
+      function(obj) {
+        console.log("fb failure", obj);
+      });
     }
 
     if(ionic.Platform.isWebView()) {

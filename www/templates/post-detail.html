@@ -1,5 +1,5 @@
 <ion-view>
-  <ion-nav-title>{{post.title}} - {{lecture.instructor.name}}</ion-nav-title>
+  <ion-nav-title>{{post.title}} <span ng-if="post.lecture">- {{post.lecture.instructor.name}}</span></ion-nav-title>
   <ion-nav-buttons side="right">
     <a class="button" ng-click="contact()">
       연락하기

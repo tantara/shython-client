@@ -50,6 +50,8 @@ module.exports = angular.module('starter.controllers', [])
   $scope.lastQuery = "";
   $scope.banner = {};
   $scope.unread = 0;
+  $scope.period = {};
+  $scope.current = "";
   //$scope.banner.image = "https://ssl.pstatic.net/sstatic/keypage/outside/scui/chuseok_2015/img/bg_banner.png";
   //$scope.banner.url = "http://naver.com"
 
@@ -74,7 +76,43 @@ module.exports = angular.module('starter.controllers', [])
     $state.go('tab.home-noti');
     $scope.unread = 0;
   }
-  
+
+  $scope.showPeriodForm = function() {
+    $scope.periodForm = {};
+    $scope.periodForm.period = $scope.current;
+    $scope.keys = Object.keys($scope.period);
+
+    var myPopup = $ionicPopup.show({
+      template: '<div class="list"><div class="item item-input item-select"><div class="input-label">학기</div><select ng-model="periodForm.period"><option ng-repeat="key in keys" value="{{key}}" ng-selected="key == periodForm.period">{{period[key]}}</option></select></div></div>',
+      title: "학기를 선택해주세요.",
+      subTitle: "해당 학기의 과목들을 검색합니다.",
+      scope: $scope,
+      buttons: [
+        { text: '취소' },
+        {
+          text: '<b>선택</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.periodForm.period) {
+              //don't allow the user to close unless he enters wifi password
+              e.preventDefault();
+            } else {
+              return $scope.periodForm.period;
+            }
+          }
+        }
+      ]
+    });
+
+    myPopup.then(function(res) {
+      console.log(res);
+      if(res != undefined) {
+        $scope.current = res;
+        $scope.season = $scope.period[$scope.current];
+      }
+    });
+  }
+
   $scope.showProfileForm = function() {
     $scope.profileForm = {};
     $scope.years = _.range(2016, 1990, -1);
@@ -151,6 +189,9 @@ module.exports = angular.module('starter.controllers', [])
           console.log(err);
         });
       }
+      if(res.show_ad) {
+        $rootScope.openAd();
+      }
     }, function(err) {
     });
   }
@@ -173,10 +214,14 @@ module.exports = angular.module('starter.controllers', [])
       $scope.header = res.header;
       $scope.abb = res.abb;
       $scope.abbText = res.abb_text;
-      $scope.season = res.season;
       $scope.notice = res.notice;
       $scope.banner = res.banner;
       $scope.unread = res.unread;
+      $scope.period = res.period;
+      if($scope.season.length == 0) {
+        $scope.season = res.season;
+        $scope.current = res.current;
+      }
       $scope.$broadcast('scroll.refreshComplete');
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
@@ -193,13 +238,13 @@ module.exports = angular.module('starter.controllers', [])
     if(query.length == 0) return;
     $scope.searchForm.query = query;
     $scope.lastQuery = query;
-    LecturesService.search(query).then(function(res) {
+    LecturesService.search(query, $scope.current).then(function(res) {
       $scope.mode = "search";
       $scope.lectures = res.lectures;
       $scope.header = res.header;
       $scope.abb = res.abb;
       $scope.abbText = res.abb_text;
-      $scope.season = res.season;
+      //$scope.season = res.season;
       $scope.notice = res.notice;
       $scope.banner = res.banner;
       $scope.$broadcast('scroll.refreshComplete');
@@ -350,7 +395,6 @@ module.exports = angular.module('starter.controllers', [])
   })
 
   $scope.tab = 1;
-  $scope.lecture = {};
   $scope.similar_lectures = [];
   $scope.remark = false;
   $scope.notice = ""
@@ -429,7 +473,7 @@ module.exports = angular.module('starter.controllers', [])
   }
 
   $scope.openLecture = function(lecture) {
-    var url = 'https://sugang.snu.ac.kr/sugang/cc/cc101.action?openSchyy=2016&openShtmFg=U000200001&openDetaShtmFg=U000300001&sbjtCd=' + lecture.course.code + '&ltNo=' + lecture.code + '&sugangFlag=P';
+    var url = 'https://sugang.snu.ac.kr/sugang/cc/cc101.action?' + lecture.syllabus + '&sbjtCd=' + lecture.course.code + '&ltNo=' + lecture.code + '&sugangFlag=P';
     $rootScope.openWebview(url);
   }
 
@@ -450,23 +494,26 @@ module.exports = angular.module('starter.controllers', [])
     })
   };
 
-  LecturesService.get($stateParams.lectureId).then(function(res) {
-    $scope.lecture = res.lecture;
-    $scope.similar_lectures = res.similar_lectures;
-    $scope.similar_header = res.similar_header;
-    $scope.lecture.isBookmarked = res.isBookmarked;
-    $scope.lecture.bookmarkCount = res.bookmark_count;
-    $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
-    $scope.lecture.location_arr = $scope.lecture.location_str.split("/");
-    $scope.notice = res.notice;
+  $scope.init = function() {
     console.log($scope.lecture);
-  }, function(err) {
-    var alertPopup = $ionicPopup.alert({
-      title: '에러',
-      template: '정보를 가져오는데 문제가 생겼습니다.',
-      okText: "확인"
-    });
-  })
+    LecturesService.get($scope.lecture.id).then(function(res) {
+      $scope.lecture = res.lecture;
+      $scope.similar_lectures = res.similar_lectures;
+      $scope.similar_header = res.similar_header;
+      $scope.lecture.isBookmarked = res.isBookmarked;
+      $scope.lecture.bookmarkCount = res.bookmark_count;
+      $scope.lecture.time_arr = $scope.lecture.time_str.split("/");
+      $scope.lecture.location_arr = $scope.lecture.location_str.split("/");
+      $scope.notice = res.notice;
+      console.log($scope.lecture);
+    }, function(err) {
+      var alertPopup = $ionicPopup.alert({
+        title: '에러',
+        template: '정보를 가져오는데 문제가 생겼습니다.',
+        okText: "확인"
+      });
+    })
+  }
 })
 
 .controller('CreatePostCtrl', function($scope, $ionicPopup, PostsService, $ionicHistory) {

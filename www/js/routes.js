@@ -1,9 +1,7 @@
-module.exports = angular.module('starter.routes', [])
+require('./constants.js')
+require('./templates.js')
 
-.constant('USER_ROLES', {
-  user: 'user_role',
-  guest: 'guest_role'
-})
+module.exports = angular.module('starter.routes', ['starter.constants', 'starter.templates'])
 
 .config(function($stateProvider, $urlRouterProvider, USER_ROLES) {
 
@@ -15,7 +13,7 @@ module.exports = angular.module('starter.routes', [])
 
   .state('intro', {
     url: '/intro',
-    templateUrl: 'templates/intro.html',
+    templateUrl: 'intro.html',
     controller: 'IntroCtrl'
   })
 
@@ -23,7 +21,7 @@ module.exports = angular.module('starter.routes', [])
   .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html',
+    templateUrl: 'tabs.html',
     controller: 'TabCtrl',
     data: {
       authorizedRoles: [USER_ROLES.user]
@@ -36,7 +34,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/home',
     views: {
       'tab-home': {
-        templateUrl: 'templates/tab-home.html',
+        templateUrl: 'tab-home.html',
         controller: 'HomeCtrl'
       }
     }
@@ -46,7 +44,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/bookmark',
     views: {
       'tab-bookmark': {
-        templateUrl: 'templates/tab-bookmark.html',
+        templateUrl: 'tab-bookmark.html',
         controller: 'BookmarkCtrl'
       }
     }
@@ -56,18 +54,8 @@ module.exports = angular.module('starter.routes', [])
     url: '/home/noti',
     views: {
       'tab-home': {
-        templateUrl: 'templates/home-noti.html',
+        templateUrl: 'home-noti.html',
         controller: 'NotiCtrl'
-      }
-    }
-  })
-
-  .state('tab.home-lecture-detail', {
-    url: '/home/lectures/:lectureId',
-    views: {
-      'tab-home': {
-        templateUrl: 'templates/lecture-detail.html',
-        controller: 'LectureDetailCtrl'
       }
     }
   })
@@ -76,28 +64,8 @@ module.exports = angular.module('starter.routes', [])
     url: '/bookmark/hot',
     views: {
       'tab-bookmark': {
-        templateUrl: 'templates/hot-lectures.html',
+        templateUrl: 'hot-lectures.html',
         controller: 'HotLecturesCtrl'
-      }
-    }
-  })
-
-  .state('tab.bookmark-lecture-detail', {
-    url: '/bookmark/lectures/:lectureId',
-    views: {
-      'tab-bookmark': {
-        templateUrl: 'templates/lecture-detail.html',
-        controller: 'LectureDetailCtrl'
-      }
-    }
-  })
-
-  .state('tab.more-lecture-detail', {
-    url: '/more/lectures/:lectureId',
-    views: {
-      'tab-more': {
-        templateUrl: 'templates/lecture-detail.html',
-        controller: 'LectureDetailCtrl'
       }
     }
   })
@@ -106,7 +74,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/market',
     views: {
       'tab-market': {
-        templateUrl: 'templates/tab-market.html',
+        templateUrl: 'tab-market.html',
         controller: 'MarketCtrl'
       }
     }
@@ -116,7 +84,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/market/create',
     views: {
       'tab-market': {
-        templateUrl: 'templates/post-create.html',
+        templateUrl: 'post-create.html',
         controller: 'CreatePostCtrl'
       }
     }
@@ -126,7 +94,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/market/:postId',
     views: {
       'tab-market': {
-        templateUrl: 'templates/post-detail.html',
+        templateUrl: 'post-detail.html',
         controller: 'PostDetailCtrl'
       }
     }
@@ -136,7 +104,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/more',
     views: {
       'tab-more': {
-        templateUrl: 'templates/tab-more.html',
+        templateUrl: 'tab-more.html',
         controller: 'MoreCtrl'
       }
     }
@@ -146,7 +114,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/more/profile',
     views: {
       'tab-more': {
-        templateUrl: 'templates/more-profile.html',
+        templateUrl: 'more-profile.html',
         controller: 'ProfileCtrl'
       }
     }
@@ -156,7 +124,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/more/auto',
     views: {
       'tab-more': {
-        templateUrl: 'templates/more-auto.html',
+        templateUrl: 'more-auto.html',
         controller: 'AutoCtrl'
       }
     }
@@ -166,7 +134,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/more/tips',
     views: {
       'tab-more': {
-        templateUrl: 'templates/more-tips.html',
+        templateUrl: 'more-tips.html',
         controller: 'TipsCtrl'
       }
     }
@@ -176,7 +144,7 @@ module.exports = angular.module('starter.routes', [])
     url: '/more/noti',
     views: {
       'tab-more': {
-        templateUrl: 'templates/more-noti.html',
+        templateUrl: 'more-noti.html',
         controller: 'NotiCtrl'
       }
     }

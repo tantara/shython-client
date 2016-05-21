@@ -8,6 +8,7 @@ var rename = require('gulp-rename');
 var sh = require('shelljs');
 var ngAnnotate = require('gulp-ng-annotate');
 var browserify = require('gulp-browserify');
+var templateCache = require('gulp-angular-templatecache');
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -20,6 +21,17 @@ gulp.task('js', function () {
   .pipe(concat('app.js'))
   .pipe(gulp.dest('./www/dist/'))
 })
+
+gulp.task('templates', function () {
+  return gulp.src('./www/templates/**/*.html')
+  .pipe(templateCache({
+    module: 'starter.templates',
+    moduleSystem: 'Browserify',
+    standalone: true,
+  }))
+  .pipe(concat('templates.js'))
+  .pipe(gulp.dest('./www/js/'))
+});
 
 gulp.task('annotate', function () {
   gulp.src(['./www/dist/app.js'])
@@ -49,6 +61,7 @@ gulp.task('sass', function(done) {
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch('./www/templates/**/*.html', ['templates']);
   gulp.watch('./www/js/**/*.js', ['scripts']);
   gulp.watch('./www/dist/app.js', ['annotate']);
   //gulp.watch('./www/js/**/*.js', ['js']);

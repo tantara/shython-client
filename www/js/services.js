@@ -1,4 +1,6 @@
-module.exports = angular.module('starter.services', [])
+require('./templates.js')
+
+module.exports = angular.module('starter.services', ['starter.templates'])
 
 .service('StatService', function($q, $http, SERVER) {
   var clickAd = function(banner) {
@@ -8,7 +10,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/stats/click_ad',
         data: banner
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -23,7 +25,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/stats/check_notice',
         data: notice
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -44,7 +46,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/tips'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -59,7 +61,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/tips',
         data: tip
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -80,7 +82,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/profiles/me'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -95,7 +97,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/profiles/me',
         data: data
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -116,7 +118,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/posts/' + postId
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -130,7 +132,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/posts/latest?last_id=' + lastId
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -145,7 +147,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/posts',
         data: data
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -167,7 +169,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/courses/' + courseId
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -187,7 +189,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/instructors/' + instructorId
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -207,7 +209,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/lectures/hot'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -221,7 +223,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/lectures/hot/liked'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -229,13 +231,13 @@ module.exports = angular.module('starter.services', [])
     });
   };
 
-  var search = function(q) {
+  var search = function(q, current) {
     return $q(function(resolve, reject) {
       $http({
         method: 'GET',
-        url: SERVER.host + '/api/v1/lectures/search?q=' + q
+        url: SERVER.host + '/api/v1/lectures/search?q=' + q + '&c=' + current
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -249,7 +251,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/lectures/' + lectureId
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -263,7 +265,7 @@ module.exports = angular.module('starter.services', [])
         method: 'POST',
         url: SERVER.host + '/api/v1/lectures/' + lectureId +  '/toggle'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -278,7 +280,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/lectures/register',
         data: data
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -303,7 +305,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/configure'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('Signup Failed.');
@@ -317,7 +319,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('Signup Failed.');
@@ -331,7 +333,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/bookmark'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('Signup Failed.');
@@ -345,7 +347,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/noti'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('Signup Failed.');
@@ -359,7 +361,7 @@ module.exports = angular.module('starter.services', [])
         method: 'GET',
         url: SERVER.host + '/api/v1/users/me/options'
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('Signup Failed.');
@@ -374,7 +376,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/users/me/options',
         data: {device: options, uuid: uuid, device_info: device}
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('Signup Failed.');
@@ -389,7 +391,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/users/me/device',
         data: {uuid: uuid, device: device}
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         resolve(res.data);
       }, function errorCallback(res) {
         reject('failed.');
@@ -527,7 +529,7 @@ module.exports = angular.module('starter.services', [])
         url: SERVER.host + '/api/v1/users',
         data: {user: user}
       }).then(function successCallback(res) {
-        console.log(res);
+        console.log(res.data);
         storeUserCredentials(res.data.token);
         resolve('success.');
       }, function errorCallback(res) {
@@ -567,10 +569,11 @@ module.exports = angular.module('starter.services', [])
 })
 
 .service('ModalService', function($ionicModal, $rootScope) {
+  "ngInject";
   var init = function(tpl, $scope) {
 
     var promise;
-    $scope = $scope || $rootScope.$new();
+    $scope = $rootScope.$new();
 
     promise = $ionicModal.fromTemplateUrl(tpl, {
       scope: $scope,
@@ -581,22 +584,84 @@ module.exports = angular.module('starter.services', [])
     });
 
     $scope.openModal = function() {
-       $scope.modal.show();
-     };
-     $scope.closeModal = function() {
-       $scope.modal.hide();
-     };
-     $scope.$on('$destroy', function() {
-       $scope.modal.remove();
-     });
+      $scope.modal.show();
+    };
+    $scope.closeModal = function() {
+      $scope.modal.hide();
+    };
+    $scope.$on('$destroy', function() {
+      $scope.modal.remove();
+    });
 
     return promise;
   }
 
-  return {
-    init: init
+  var showLecture = function(lectureId, close) {
+    var scope = $rootScope.$new();
+    scope.lecture = {id: lectureId};
+
+    $ionicModal.fromTemplateUrl('modal-lecture-detail.html', {
+      scope: scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      scope.modal = modal;
+      scope.close  = function() {
+        scope.modal.hide();
+        if(close) {
+          close();
+        }
+      }
+
+      scope.modal.show();
+    });
   }
 
+  var showCourse = function(course, close) {
+    var scope = $rootScope.$new();
+    scope.course = course;
+
+    $ionicModal.fromTemplateUrl('modal-course-detail.html', {
+      scope: scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      scope.modal = modal;
+      scope.close  = function() {
+        scope.modal.hide();
+        if(close) {
+          close();
+        }
+      }
+
+      scope.modal.show();
+    });
+  }
+
+  var showInstructor = function(instructor, close) {
+    var scope = $rootScope.$new();
+    scope.lecture = lecture;
+
+    $ionicModal.fromTemplateUrl('modal-instructor-detail.html', {
+      scope: scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      scope.modal = modal;
+      scope.close  = function() {
+        scope.modal.hide();
+        if(close) {
+          close();
+        }
+      }
+
+      scope.modal.show();
+    });
+  }
+
+  return {
+    init: init,
+    showLecture: showLecture,
+    showCourse: showCourse,
+    showInstructor: showInstructor,
+  }
 })
 
 .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
