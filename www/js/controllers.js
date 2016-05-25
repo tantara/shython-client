@@ -656,6 +656,7 @@ module.exports = angular.module('starter.controllers', [])
     }, function(err) {
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
+      $scope.canBeLoaded = false;
       var alertPopup = $ionicPopup.alert({
         title: '에러',
         template: '정보를 가져오는데 문제가 생겼습니다.',
