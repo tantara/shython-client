@@ -556,7 +556,8 @@ module.exports = angular.module('starter.controllers', [])
     if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
   })
 
-  $scope.post = {};
+  console.log($scope.post);
+  //$scope.post = {};
   $scope.notice = "";
   $scope.form = {}
   $scope.loaded = true;
@@ -613,7 +614,7 @@ module.exports = angular.module('starter.controllers', [])
     }
   }
 
-  PostsService.get($stateParams.postId).then(function(res) {
+  PostsService.get($scope.post.id).then(function(res) {
     $scope.post = res.post;
     $scope.notice = res.notice;
   }, function(err) {
@@ -637,6 +638,52 @@ module.exports = angular.module('starter.controllers', [])
   $scope.posts = [];
   $scope.header = "";
   $scope.notice = "";
+  $scope.boardKey = "";
+  $scope.board = "";
+  $scope.boards = {};
+
+  $scope.showBoards = function() {
+    $scope.boardForm = {};
+    $scope.boardForm.key = $scope.boardKey;
+    $scope.keys = Object.keys($scope.boards);
+
+    var myPopup = $ionicPopup.show({
+      template: '<div class="list"><div class="item item-input item-select"><div class="input-label">게시판</div><select ng-model="boardForm.key"><option ng-repeat="key in keys" value="{{key}}" ng-selected="key == boardForm.key">{{boards[key].name}}</option></select></div></div>',
+      title: "게시판을 선택해주세요.",
+      subTitle: "강의, 책 등을 교환하는 글을 올리는 게시판입니다.",
+      scope: $scope,
+      buttons: [
+        { text: '취소' },
+        {
+          text: '<b>선택</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.boardForm.key) {
+              //don't allow the user to close unless he enters wifi password
+              e.preventDefault();
+            } else {
+              return $scope.boardForm.key;
+            }
+          }
+        }
+      ]
+    });
+
+    myPopup.then(function(res) {
+      console.log(res);
+      if(res != undefined) {
+        console.log(res);
+        var boardKey = res;
+        if($scope.boardKey != boardKey) {
+          $scope.boardKey = boardKey;
+          $scope.board = $scope.boards[$scope.boardKey].name;
+          $scope.lastId = 0;
+          $scope.posts = [];
+          $scope.loadMore();
+        }
+      }
+    });
+  }
 
   $scope.doRefresh = function() {
     $scope.lastId = 0;
@@ -645,7 +692,7 @@ module.exports = angular.module('starter.controllers', [])
   }
 
   $scope.loadMore = function() {
-    PostsService.getLatest($scope.lastId).then(function(res) {
+    PostsService.getLatest($scope.lastId, $scope.boardKey).then(function(res) {
       if($scope.lastId == 0) $scope.posts = [];
       $scope.canBeLoaded = res.load_more;
       $scope.posts = $scope.posts.concat(res.posts);
@@ -653,11 +700,16 @@ module.exports = angular.module('starter.controllers', [])
         $scope.lastId = $scope.posts[$scope.posts.length - 1].id;
       }
       if($scope.posts.length == 0) {
-        $scope.header = "교환이 가능한 강의가 없습니다.";
+        $scope.header = "교환이 가능한 항목이 없습니다.";
       } else {
         $scope.header = res.header;
       }
       $scope.notice = res.notice;
+      $scope.boards = res.boards;
+      if($scope.boardKey.length <= 0) {
+        $scope.boardKey = res.current;
+        $scope.board = $scope.boards[$scope.boardKey].name;
+      }
       $scope.$broadcast('scroll.refreshComplete');
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }, function(err) {

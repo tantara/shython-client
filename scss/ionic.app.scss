@@ -15,7 +15,50 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-$positive: #11c1f3;
+//$positive: #11c1f3 !default;
+//$balanced: #33cd5f !default;
+//$energized: #ffc900 !default;
+//$assertive: #ef473a !default;
+
+//Flat-design-colors
+//$positive: #334D5C !default;
+//$balanced: #45B29D !default;
+//$energized: #EFC94C !default;
+//$assertive: #DF5A49 !default;
+
+//Draw-With-Me-color-theme
+//$positive: #3CBAC8 !default;
+//$balanced: #93EDD4 !default;
+//$energized: #F9CB8F !default;
+//$assertive: #F19181 !default;
+
+//Flat-rainbow-color-theme
+//$positive: #2D95BF !default;
+//$balanced: #4EBA6F !default;
+//$energized: #F0C419 !default;
+//$assertive: #F15A5A !default;
+
+//SOFT 너무 흐리다
+//$positive: #0092C7 !default;
+//$balanced: #9FE0F6 !default;
+//$energized: #F3E59A !default;
+//$assertive: #F29C9C !default;
+
+//流行色
+//$positive: #00ABD8 !default;
+
+$positive: #0067A6 !default;
+$balanced: #008972 !default;
+$energized: #EFC028 !default;
+$assertive: #F2572D !default;
+
+//Primary Colors
+//$positive: #00ABD8 !default;
+
+//$positive: #0EA8E3 !default;
+//$balanced: #22C3AA !default;
+//$energized: #EFC028 !default;
+//$assertive: #DB6968 !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;

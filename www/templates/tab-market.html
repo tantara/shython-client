@@ -1,4 +1,7 @@
-<ion-view view-title="강의교환" cache-view="false">
+<ion-view cache-view="false">
+  <ion-nav-title>
+    <span ng-click="showBoards()">{{board}} <i class="icon ion-arrow-down-b" ng-if="board.length > 0"></i></span>
+  </ion-nav-title>
   <ion-nav-buttons side="right">
     <a class="button" href="#/tab/market/create">
       글쓰기
@@ -21,7 +24,7 @@
         {{header}}
       </div>
 
-      <a class="item item-icon-right" ng-repeat="post in posts track by post.id" href="#/tab/market/{{::post.id}}">
+      <a class="item item-icon-right" ng-repeat="post in posts track by post.id" ng-click="showPost({{::post.id}})">
         <h2>{{::post.title}} [{{::post.comment_count}}]</h2>
         <p>{{::post.content}}</p>
         <i class="icon icon-accessory last-history">

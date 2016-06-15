@@ -161,11 +161,11 @@ module.exports = angular.module('starter.services', ['starter.templates'])
     });
   };
 
-  var getLatest = function(lastId) {
+  var getLatest = function(lastId, boardKey) {
     return $q(function(resolve, reject) {
       $http({
         method: 'GET',
-        url: SERVER.host + '/api/v1/posts/latest?last_id=' + lastId
+        url: SERVER.host + '/api/v1/posts/latest?last_id=' + lastId + '&board_key=' + boardKey
       }).then(function successCallback(res) {
         console.log(res.data);
         resolve(res.data);
@@ -632,6 +632,26 @@ module.exports = angular.module('starter.services', ['starter.templates'])
     return promise;
   }
 
+  var showPost = function(postId, close) {
+    var scope = $rootScope.$new();
+    scope.post = {id: postId};
+
+    $ionicModal.fromTemplateUrl('modal-post-detail.html', {
+      scope: scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      scope.modal = modal;
+      scope.close  = function() {
+        scope.modal.hide();
+        if(close) {
+          close();
+        }
+      }
+
+      scope.modal.show();
+    });
+  }
+
   var showLecture = function(lectureId, close) {
     var scope = $rootScope.$new();
     scope.lecture = {id: lectureId};
@@ -695,6 +715,7 @@ module.exports = angular.module('starter.services', ['starter.templates'])
   return {
     init: init,
     showLecture: showLecture,
+    showPost: showPost,
     showCourse: showCourse,
     showInstructor: showInstructor,
   }

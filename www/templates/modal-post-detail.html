@@ -1,10 +1,14 @@
-<ion-view>
-  <ion-nav-title>{{post.title}} <span ng-if="post.lecture">- {{post.lecture.instructor.name}}</span></ion-nav-title>
-  <ion-nav-buttons side="right">
+<ion-modal-view ng-controller="PostDetailCtrl" ng-init="init()">
+  <ion-header-bar class="bar-positive fix-buttons">
+    <a class="button" ng-click="close()">
+      <i class="icon ion-close"></i>
+    </a>
+    <h1 class="title">
+      {{post.title}} <span ng-if="post.lecture">- {{post.lecture.instructor.name}}</span></h1>
     <a class="button" ng-click="contact()">
       연락하기
     </a>
-  </ion-nav-buttons>
+  </ion-header-bar>
   <ion-content class="padding">
     <div class="scroll">
       <div class="item item-icon-left" ng-if="notice.length > 0">
@@ -53,4 +57,4 @@
       </div>
     </div>
   </ion-content>
-</ion-view>
+</ion-modal-view>

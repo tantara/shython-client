@@ -16,6 +16,12 @@
         {{header}}
       </div>
 
+      <div class="item" ng-if="notis.length == 0">
+        <p class="multiline-p text-center">
+        강의 상세 페이지에서 즐겨찾기<i class="icon ion-star"></i>를 해주세요!!
+        </p>
+      </div>
+
       <li class="item item-icon-right" ng-repeat="noti in notis track by noti.id">
         <h2 ng-if="noti.lecture">{{::noti.lecture.course.name}}, {{::noti.lecture.instructor.name}}</h2>
         <p>{{::noti.content}}</p>

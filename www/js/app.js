@@ -44,6 +44,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     ionicToast.show(msg, 'middle', false, 1000);
   };
 
+  $rootScope.showPost = function(post, close) {
+    ModalService.showPost(post, close);
+  }
+
   $rootScope.showLecture = function(lecture, close) {
     ModalService.showLecture(lecture, close);
   }
