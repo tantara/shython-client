@@ -313,7 +313,7 @@ module.exports = angular.module('starter.controllers', [])
   };
 })
 
-.controller('BookmarkCtrl', function($scope, $ionicPopup, UsersService) {
+.controller('BookmarkCtrl', function($scope, $ionicPopup, UsersService, $rootScope) {
   $scope.$on('$ionicView.enter', function() {
     var ctrlName = "Bookmark Controller";
     console.log(ctrlName);
@@ -328,6 +328,12 @@ module.exports = angular.module('starter.controllers', [])
 
   $scope.doRefresh = function() {
     $scope.init();
+  }
+
+  $scope.showLecture = function(lecture) {
+    $rootScope.showLecture(lecture, function() {
+      $scope.init();
+    })
   }
 
   $scope.init = function() {
@@ -634,6 +640,7 @@ module.exports = angular.module('starter.controllers', [])
 
   $scope.doRefresh = function() {
     $scope.lastId = 0;
+    $scope.canBeLoaded = false;
     $scope.loadMore();
   }
 

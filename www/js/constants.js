@@ -6,8 +6,8 @@ module.exports = angular.module('starter.constants', [])
 })
 
 .constant('SERVER', {
-  //host: 'http://192.168.0.36:5050',
-  host: 'https://api-sugang.snu.ac',
+  host: 'http://192.168.88.62:5050',
+  //host: 'https://api-sugang.snu.ac',
   web: 'https://sugang.snu.ac',
 })
 

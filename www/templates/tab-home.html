@@ -28,7 +28,7 @@
       </button>
     </div>
 
-    <div class="padding padding-abb" ng-if="abb.length > 0">
+    <div class="padding padding-abb bg-white" ng-if="abb.length > 0">
       <button class="button button-clear button-xsmall button-dark">{{abbText}}</button>
       <button class="button button-outline button-positive button-xsmall" ng-repeat="a in abb" ng-click="search(a)">
         {{::a}}
@@ -49,6 +49,7 @@
       </div>
 
       <div class="item item-divider" ng-if="header.length > 0">
+        <i class="icon ion-clock"></i>
         {{header}}
       </div>
 

@@ -1,5 +1,24 @@
 /* Empty. Add your own CSS if you like */
 
+.pane {
+  //background-image: url('../img/snu.png');
+  background-color: #fafafa;
+}
+
+.modal.slide-in-up {
+  //background-image: url('../img/snu.png');
+  //background-color: #fafafa;
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.item-empty {
+  background-color: transparent;
+  border: 0;
+}
+
 .tabs-striped .tab-item {
   border-color: #11c1f3 !important;
 }
