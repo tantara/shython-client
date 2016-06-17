@@ -672,9 +672,9 @@ module.exports = angular.module('starter.services', ['starter.templates'])
     });
   }
 
-  var showCourse = function(course, close) {
+  var showCourse = function(courseId, close) {
     var scope = $rootScope.$new();
-    scope.course = course;
+    scope.course = {id: courseId};
 
     $ionicModal.fromTemplateUrl('modal-course-detail.html', {
       scope: scope,
@@ -692,9 +692,9 @@ module.exports = angular.module('starter.services', ['starter.templates'])
     });
   }
 
-  var showInstructor = function(instructor, close) {
+  var showInstructor = function(instructorId, close) {
     var scope = $rootScope.$new();
-    scope.lecture = lecture;
+    scope.instructor = {id: instructorId};
 
     $ionicModal.fromTemplateUrl('modal-instructor-detail.html', {
       scope: scope,

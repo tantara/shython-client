@@ -47,10 +47,10 @@ $dark:                            #444 !default;
 //流行色
 //$positive: #00ABD8 !default;
 
-$positive: #0067A6 !default;
-$balanced: #008972 !default;
-$energized: #EFC028 !default;
-$assertive: #F2572D !default;
+//$positive: #0067A6 !default;
+//$balanced: #008972 !default;
+//$energized: #EFC028 !default;
+//$assertive: #F2572D !default;
 
 //Primary Colors
 //$positive: #00ABD8 !default;
@@ -59,6 +59,19 @@ $assertive: #F2572D !default;
 //$balanced: #22C3AA !default;
 //$energized: #EFC028 !default;
 //$assertive: #DB6968 !default;
+
+// custom
+//$positive: #7AB5E8 !default;
+//$balanced: #52FF7B !default;
+//$energized: #E8DF76 !default;
+//$assertive: #FFBE8F !default;
+
+// rainbow
+//$positive: #955BA5 !default;
+$positive: #334D5C !default;
+$balanced: #4EBA6F !default;
+$energized: #F0C419 !default;
+$assertive: #F15A5A !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;

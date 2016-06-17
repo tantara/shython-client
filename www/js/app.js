@@ -44,20 +44,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     ionicToast.show(msg, 'middle', false, 1000);
   };
 
-  $rootScope.showPost = function(post, close) {
-    ModalService.showPost(post, close);
+  $rootScope.showPost = function(postId, close) {
+    ModalService.showPost(postId, close);
   }
 
-  $rootScope.showLecture = function(lecture, close) {
-    ModalService.showLecture(lecture, close);
+  $rootScope.showLecture = function(lectureId, close) {
+    ModalService.showLecture(lectureId, close);
   }
 
-  $rootScope.showCourse = function(course) {
-    ModalService.showCourse(course);
+  $rootScope.showCourse = function(courseId, close) {
+    ModalService.showCourse(courseId, close);
   }
 
-  $rootScope.showInstructor = function(instructor) {
-    ModalService.showInstructor(instructor);
+  $rootScope.showInstructor = function(instructorId, close) {
+    ModalService.showInstructor(instructorId, close);
   }
 
   $rootScope.openSugang = function() {

@@ -3,8 +3,7 @@
     <a class="button" ng-click="close()">
       <i class="icon ion-close"></i>
     </a>
-    <h1 class="title">{{lecture.course.name}} - {{lecture.instructor.name}}</h1>
-    <a class="button button-icon" ng-class="{'ion-ios-star-outline': !lecture.isBookmarked, 'ion-ios-star': lecture.isBookmarked}" ng-click="toggle(lecture.id)"></a>
+    <h1 class="title">{{instructor.name}}</h1>
   </ion-header-bar>
   <ion-content class="padding">
     <div class="scroll">

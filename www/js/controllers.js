@@ -393,7 +393,7 @@ module.exports = angular.module('starter.controllers', [])
   $scope.init();
 })
 
-.controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope, AuthService, $cordovaInAppBrowser, $cordovaEmailComposer) {
+.controller('LectureDetailCtrl', function($scope, $ionicPopup, LecturesService, $stateParams, $rootScope, AuthService, $cordovaInAppBrowser, $cordovaEmailComposer, $ionicActionSheet, $rootScope) {
   $scope.$on('$ionicView.enter', function() {
     var ctrlName = "Lecture Detail Controller";
     console.log(ctrlName);
@@ -404,6 +404,41 @@ module.exports = angular.module('starter.controllers', [])
   $scope.similar_lectures = [];
   $scope.remark = false;
   $scope.notice = ""
+
+  $scope.showDetail = function() {
+    var buttons = []
+    , text = "";
+
+    // open course
+    text = "[교과목] " + $scope.lecture.course.name;
+    if(!ionic.Platform.isIOS()) {
+      text = '<i class="icon ion-easel"></i> ' + text;
+    }
+    buttons.push({ text: text });
+
+    // open instructor
+    text = "[강의자] " + $scope.lecture.instructor.name;
+    if(!ionic.Platform.isIOS()) {
+      text = '<i class="icon ion-person"></i> ' + text;
+    }
+    buttons.push({ text: text });
+
+    var hideSheet = $ionicActionSheet.show({
+      buttons: buttons,
+      titleText: "세부정보",
+      cancelText: "닫기",
+      cancel: function() {
+      },
+      buttonClicked: function(index) { // zero base
+        if(index == 0) {
+          $rootScope.showCourse($scope.lecture.course.id);
+        } else if(index == 1) {
+          $rootScope.showInstructor($scope.lecture.instructor.id);
+        }
+        return true;
+      }
+    });
+  }
 
   $scope.tabChanged = function(tab) {
     if($scope.tab != tab) {
@@ -547,6 +582,52 @@ module.exports = angular.module('starter.controllers', [])
       });
     })
   };
+})
+
+.controller('CourseDetailCtrl', function($scope, $ionicPopup, CoursesService) {
+  /*$scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Course Detail Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })*/
+
+  var ctrlName = "Course Detail Controller";
+  console.log(ctrlName);
+  if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+
+  CoursesService.get($scope.course.id).then(function(res) {
+    $scope.course = res.course;
+    $scope.notice = res.notice;
+  }, function(err) {
+    var alertPopup = $ionicPopup.alert({
+      title: '에러',
+      template: '정보를 가져오는데 문제가 생겼습니다.',
+      okText: "확인"
+    });
+  })
+})
+
+.controller('InstructorDetailCtrl', function($scope, $ionicPopup, InstructorsService) {
+  /*$scope.$on('$ionicView.enter', function() {
+    var ctrlName = "Instructor Detail Controller";
+    console.log(ctrlName);
+    if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+  })*/
+
+  var ctrlName = "Instructor Detail Controller";
+  console.log(ctrlName);
+  if(typeof analytics !== "undefined") { analytics.trackView(ctrlName); }
+
+  InstructorsService.get($scope.instructor.id).then(function(res) {
+    $scope.instructor = res.instructor;
+    $scope.notice = res.notice;
+  }, function(err) {
+    var alertPopup = $ionicPopup.alert({
+      title: '에러',
+      template: '정보를 가져오는데 문제가 생겼습니다.',
+      okText: "확인"
+    });
+  })
 })
 
 .controller('PostDetailCtrl', function($scope, $ionicPopup, PostsService, $stateParams, $window, CommentsService) {

@@ -3,7 +3,10 @@
     <a class="button modal-button" ng-click="close()">
       <i class="icon ion-close"></i>
     </a>
-    <h1 class="title">{{lecture.course.name}} - {{lecture.instructor.name}}</h1>
+    <h1 class="title" ng-click="showDetail()">
+      {{lecture.course.name}} - {{lecture.instructor.name}}
+      <i class="icon ion-arrow-down-b"></i>
+    </h1>
     <a class="button button-icon modal-button" ng-class="{'ion-ios-star-outline': !lecture.isBookmarked, 'ion-ios-star': lecture.isBookmarked}" ng-click="toggle(lecture.id)"></a>
   </ion-header-bar>
   <ion-content class="padding">
@@ -63,16 +66,18 @@
           <i class="icon ion-information"></i>
           교과목번호(강좌번호)
         </li>
-        <li class="item">
+        <a class="item item-icon-right" ng-click="showCourse({{lecture.course.id}})">
           [{{lecture.course.course_type | courseType2Str }}, {{lecture.course.credit}}학점] {{lecture.course.code}}({{lecture.code}})
-        </li>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </a>
         <li class="item item-divider">
           <i class="icon ion-person"></i>
           주담당교수
         </li>
-        <li class="item">
+        <a class="item item-icon-right" ng-click="showInstructor({{lecture.instructor.id}})">
           {{lecture.instructor.name}}({{lecture.instructor.department.name}}, {{lecture.instructor.college.name}})
-        </li>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </a>
         <li class="item item-divider" ng-if="lecture.lang.length > 0">
           <i class="icon ion-earth"></i>
           강의 언어
